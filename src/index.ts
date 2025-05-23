@@ -2,6 +2,7 @@ import cors from "@elysiajs/cors";
 import swagger from "@elysiajs/swagger";
 import { Elysia, t } from "elysia";
 import { rateLimit } from "elysia-rate-limit";
+import { Logestic } from "logestic";
 import { ALLOWED_ORIGINS, PORT } from "./helpers/constants";
 import { generatePalette } from "./services/gemini";
 
@@ -22,6 +23,7 @@ app.use(
     },
   })
 );
+app.use(Logestic.preset("fancy"));
 
 app.post(
   "/generate-palette",
