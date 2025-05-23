@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: afor-branding
+    # ports:
+    # - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+
+    command: bun run dev
