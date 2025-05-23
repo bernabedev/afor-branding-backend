@@ -102,6 +102,12 @@ app.get("/health", () => {
   };
 });
 
+app.get("/", () => {
+  return {
+    message: "Welcome to the Afor API",
+  };
+});
+
 app.listen(PORT || 3000);
 
 console.log(
