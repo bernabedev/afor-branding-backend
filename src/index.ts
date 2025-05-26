@@ -4,7 +4,7 @@ import { Elysia, t } from "elysia";
 import { rateLimit } from "elysia-rate-limit";
 import { Logestic } from "logestic";
 import { ALLOWED_ORIGINS, PORT } from "./helpers/constants";
-import { generatePalette } from "./services/gemini";
+import { generateContentChatBot, generatePalette } from "./services/gemini";
 
 const app = new Elysia();
 app.use(rateLimit());
@@ -95,6 +95,30 @@ app.post(
         },
       },
     },
+  }
+);
+
+app.post(
+  "/bot/:id",
+  async ({ set, body, params }) => {
+    const { id } = params;
+    const { value } = body;
+    const response = await generateContentChatBot(id, value);
+    set.status = response ? 200 : 400;
+    return {
+      response,
+      message: response
+        ? "Response generated successfully"
+        : "Unable to generate response",
+    };
+  },
+  {
+    params: t.Object({
+      id: t.String(),
+    }),
+    body: t.Object({
+      value: t.String(),
+    }),
   }
 );
 
