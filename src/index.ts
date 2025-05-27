@@ -107,7 +107,12 @@ app.post(
     set.status = response ? 200 : 400;
     let type = "text";
     if (Array.isArray(response)) {
-      type = "palette";
+      // CHECK IS FONTS OR PALETTE
+      if (response[0] instanceof Object && "role" in response[0]) {
+        type = "fonts";
+      } else {
+        type = "palette";
+      }
     }
     return {
       response,

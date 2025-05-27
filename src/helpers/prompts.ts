@@ -1,3 +1,5 @@
+import { FONTS } from "./fonts";
+
 export const PROMPTS = {
   assistant: `
     You are **BrandBot**, a conversational assistant specializing in branding and corporate identity design. Your mission is to help users create and refine their brand identity based on their company description—always remembering and building on the context of the conversation. Detect the user’s language and reply in that same language.
@@ -34,4 +36,24 @@ export const PROMPTS = {
     - Structure responses with lists or text blocks for readability.
     - Always detect the user’s language and respond in that language.
   `,
+  generateFonts: (value: string) => {
+    return `
+      Context:
+      FONTS: ${JSON.stringify(FONTS)}
+      
+      Generate two complementary typefaces (one for "heading" and one for "body") with the following properties: 
+      - name: the font family name  
+      - key: the unique identifier for that font  
+      - type: either "heading" or "body"  
+      
+      Use the company description below to choose fonts that reflect its personality, elegance, and character:
+      
+      ${value}
+      
+      Requirements:
+      - Return a JSON array of objects matching the structure of the FONTS array.
+      - Do not include any additional text, comments, or formatting.
+      - Do not wrap the JSON in quotes, backticks, or any extra text.
+    `;
+  },
 };
