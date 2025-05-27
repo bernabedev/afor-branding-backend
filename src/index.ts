@@ -105,8 +105,13 @@ app.post(
     const { value } = body;
     const response = await generateContentChatBot(id, value);
     set.status = response ? 200 : 400;
+    let type = "text";
+    if (Array.isArray(response)) {
+      type = "palette";
+    }
     return {
       response,
+      type,
       message: response
         ? "Response generated successfully"
         : "Unable to generate response",
