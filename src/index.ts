@@ -196,19 +196,37 @@ app.post(
   }
 );
 
-app.get("/health", () => {
-  return {
-    status: "OK",
-    timestamp: new Date().toISOString(),
-  };
-});
+app.get(
+  "/health",
+  () => {
+    return {
+      status: "OK",
+      timestamp: new Date().toISOString(),
+    };
+  },
+  {
+    detail: {
+      summary: "Health check",
+      description: "Check if the server is running.",
+    },
+  }
+);
 
-app.get("/", () => {
-  return {
-    message: "Welcome to the Afor API",
-    version: "1.0.0",
-  };
-});
+app.get(
+  "/",
+  () => {
+    return {
+      message: "Welcome to the Afor API",
+      version: "1.0.0",
+    };
+  },
+  {
+    detail: {
+      summary: "Root endpoint",
+      description: "Welcome message.",
+    },
+  }
+);
 
 app.listen(PORT || 3000);
 
