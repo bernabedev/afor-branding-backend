@@ -5,25 +5,17 @@ export type Font = {
   type: FontType;
 };
 
-export const FONTS: Font[] = [
-  {
-    name: "Inter",
-    key: "inter",
-    type: "heading",
-  },
-  {
-    name: "Poppins",
-    key: "poppins",
-    type: "body",
-  },
-  {
-    name: "Roboto",
-    key: "roboto",
-    type: "body",
-  },
-  {
-    name: "Lato",
-    key: "lato",
-    type: "body",
-  },
-];
+export type FontList = Omit<Font, "type"> & {
+  availableFor: FontType[];
+};
+
+export const FONTS: FontList[] = [
+  { name: "Inter", key: "inter", availableFor: ["heading", "body"] },
+  { name: "Poppins", key: "poppins", availableFor: ["heading"] },
+  { name: "DMSans", key: "dm-sans", availableFor: ["heading"] },
+  { name: "Geist", key: "geist", availableFor: ["heading", "body"] },
+  { name: "Montserrat", key: "montserrat", availableFor: ["heading"] },
+  { name: "CalSans", key: "cal-sans", availableFor: ["body"] },
+  { name: "Lato", key: "lato", availableFor: ["body"] },
+  { name: "Figtree", key: "figtree", availableFor: ["body"] },
+] as const;
