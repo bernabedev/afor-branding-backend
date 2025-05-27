@@ -10,6 +10,7 @@ import { PrismaClient } from "./generated/prisma";
 import { ALLOWED_ORIGINS, JWT_SECRET, PORT } from "./helpers/constants";
 import { authModule } from "./modules/auth/auth.module";
 import { JwtSignerVerifier } from "./modules/auth/domain/jwt-payload.interface";
+import { chatbotModule } from "./modules/chatbot/chatbot.module";
 import { generateContentChatBot, generatePalette } from "./services/gemini";
 
 if (!JWT_SECRET || JWT_SECRET === "afor") {
@@ -93,6 +94,9 @@ const authRoutes = authModule({
   jwtInstance: (app.decorator as { jwtAuth: JwtSignerVerifier }).jwtAuth,
 });
 app.use(authRoutes);
+
+const chatbotRoutes = chatbotModule({ prisma });
+app.use(chatbotRoutes);
 
 app.post(
   "/generate-palette",
