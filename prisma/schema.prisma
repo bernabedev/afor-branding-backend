@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String             @id @default(uuid())
+  email        String             @unique
+  name         String?
+  passwordHash String
+  palettes     GeneratedPalette[]
+  favoritePals FavoritePalette[]
+  chats        Chat[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  @@index([email])
+  @@map("users")
+}
+
+model GeneratedPalette {
+  id        String            @id @default(uuid())
+  user      User?             @relation(fields: [userId], references: [id])
+  userId    String?
+  colors    Json
+  favorites FavoritePalette[]
+  createdAt DateTime          @default(now())
+
+  @@index([userId])
+  @@map("generated_palettes")
+}
+
+model FavoritePalette {
+  id        String           @id @default(uuid())
+  user      User             @relation(fields: [userId], references: [id])
+  userId    String
+  palette   GeneratedPalette @relation(fields: [paletteId], references: [id])
+  paletteId String
+  createdAt DateTime         @default(now())
+
+  @@unique([userId, paletteId])
+  @@index([userId])
+  @@index([paletteId])
+  @@map("favorite_palettes")
+}
+
+model Chat {
+  id        String        @id @default(uuid())
+  user      User          @relation(fields: [userId], references: [id])
+  userId    String
+  messages  ChatMessage[]
+  createdAt DateTime      @default(now())
+
+  @@index([userId])
+  @@map("chats")
+}
+
+enum MessageRole {
+  USER      @map("user")
+  ASSISTANT @map("assistant")
+  SYSTEM    @map("system")
+
+  @@map("message_role")
+}
+
+enum MessageReaction {
+  LIKE    @map("like")
+  DISLIKE @map("dislike")
+
+  @@map("message_reaction")
+}
+
+model ChatMessage {
+  id        String           @id @default(uuid())
+  chat      Chat             @relation(fields: [chatId], references: [id])
+  chatId    String
+  role      MessageRole
+  content   String
+  reaction  MessageReaction?
+  createdAt DateTime         @default(now())
+
+  @@index([chatId])
+  @@map("chat_messages")
+}
