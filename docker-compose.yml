@@ -9,5 +9,8 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_MODEL=${GEMINI_MODEL}
 
     command: bun run dev
