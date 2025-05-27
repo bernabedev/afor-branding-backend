@@ -108,7 +108,7 @@ app.post(
     let type = "text";
     if (Array.isArray(response)) {
       // CHECK IS FONTS OR PALETTE
-      if (response[0] instanceof Object && "role" in response[0]) {
+      if (response[0] instanceof Object && "key" in response[0]) {
         type = "fonts";
       } else {
         type = "palette";
