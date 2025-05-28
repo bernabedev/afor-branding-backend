@@ -14,7 +14,10 @@ export type PaginateOptions = {
   page?: number | string;
   perPage?: number | string;
 };
-export type PaginateFunction = <T, K>(
+export type PaginateFunction = <
+  T,
+  K extends { where?: any; orderBy?: any; include?: any }
+>(
   model: any,
   args?: K,
   options?: PaginateOptions
@@ -26,8 +29,10 @@ export const paginator = (
   return async (model, args: any = { where: undefined }, options) => {
     const page = Number(options?.page || defaultOptions?.page) || 1;
     const perPage = Number(options?.perPage || defaultOptions?.perPage) || 10;
-    const take = Math.min(perPage, 200);
-    const skip = page > 0 ? perPage * (page - 1) : 0;
+
+    const take = Math.min(Number(perPage), 100);
+    const skip = page > 0 ? take * (page - 1) : 0;
+
     const [total, data] = await Promise.all([
       model.count({ where: args.where }),
       model.findMany({
@@ -36,7 +41,7 @@ export const paginator = (
         skip,
       }),
     ]);
-    const lastPage = Math.ceil(total / perPage);
+    const lastPage = Math.ceil(total / take);
 
     return {
       data,
@@ -51,3 +56,5 @@ export const paginator = (
     };
   };
 };
+
+export const paginate: PaginateFunction = paginator({ page: 1, perPage: 10 });

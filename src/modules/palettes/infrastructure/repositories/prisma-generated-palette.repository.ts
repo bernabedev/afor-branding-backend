@@ -3,19 +3,13 @@ import type {
   PrismaClient,
   GeneratedPalette as PrismaGeneratedPalette,
 } from "@/generated/prisma";
-import {
-  PaginatedResult,
-  PaginateFunction,
-  paginator,
-} from "@/helpers/paginate";
+import { paginate, PaginatedResult } from "@/helpers/paginate";
 import type { PaletteColor } from "@/modules/chatbot/domain/palette.entity";
 import type { IGeneratedPaletteRepository } from "../../application/ports/generated-palette.repository";
 import type {
   GeneratedPalette,
   GeneratedPaletteCreationData,
 } from "../../domain/generated-palette.entity";
-
-const paginate: PaginateFunction = paginator({ perPage: 10 });
 
 export class PrismaGeneratedPaletteRepository
   implements IGeneratedPaletteRepository
