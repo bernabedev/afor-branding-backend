@@ -98,19 +98,6 @@ app
   .onStop(async () => {
     await prisma.$disconnect();
     console.log("🚪 Disconnected from the database");
-  })
-  .onError(({ code, error, set }) => {
-    console.error(`Error: ${code} - ${error.stack || error.message}`);
-    if (code === "VALIDATION") {
-      set.status = 400;
-      return { message: "Validation Error", errors: error.all };
-    }
-    if (code === "NOT_FOUND") {
-      set.status = 404;
-      return { message: "Resource not found" };
-    }
-    set.status = 500;
-    return { message: "Internal Server Error" };
   });
 
 const authRoutes = authModule({
