@@ -13,6 +13,23 @@ import type {
 
 export class PrismaChatMessageRepository implements IChatMessageRepository {
   constructor(private readonly prisma: PrismaClient) {}
+  async findById(id: string): Promise<ChatMessage | null> {
+    const prismaMsg = await this.prisma.chatMessage.findUnique({
+      where: { id },
+    });
+    return prismaMsg ? this.mapToDomain(prismaMsg) : null;
+  }
+
+  async updateReaction(
+    id: string,
+    reaction: MessageReactionDomain | null
+  ): Promise<ChatMessage> {
+    const prismaMsg = await this.prisma.chatMessage.update({
+      where: { id },
+      data: { reaction },
+    });
+    return this.mapToDomain(prismaMsg);
+  }
 
   private mapToDomain(prismaMsg: PrismaChatMessage): ChatMessage {
     return {

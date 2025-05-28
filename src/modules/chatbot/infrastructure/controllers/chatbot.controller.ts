@@ -1,6 +1,10 @@
+import { PrismaClient } from "@/generated/prisma";
+import { CreateGeneratedPaletteUseCase } from "@/modules/palettes/application/use-cases/create-generated-palette.use-case";
+import { PrismaGeneratedPaletteRepository } from "@/modules/palettes/infrastructure/repositories/prisma-generated-palette.repository";
 import { Elysia, t } from "elysia";
 import type { SendChatMessageUseCase } from "../../application/use-cases/send-chat-message.use-case";
 import type { StartChatSessionUseCase } from "../../application/use-cases/start-chat-session.use-case";
+import { PaletteColor } from "../../domain/palette.entity";
 
 const sendMessageBodySchema = t.Object({
   message: t.String({ minLength: 1 }),
@@ -10,10 +14,20 @@ const sendMessageBodySchema = t.Object({
 interface ChatbotControllerDependencies {
   startChatSessionUseCase: StartChatSessionUseCase;
   sendChatMessageUseCase: SendChatMessageUseCase;
+  prismaClient: PrismaClient;
 }
 
 export const chatbotController = (deps: ChatbotControllerDependencies) => {
-  const { startChatSessionUseCase, sendChatMessageUseCase } = deps;
+  const { startChatSessionUseCase, sendChatMessageUseCase, prismaClient } =
+    deps;
+
+  const generatedPaletteRepository = new PrismaGeneratedPaletteRepository(
+    prismaClient
+  );
+
+  const createGeneratedPaletteUseCase = new CreateGeneratedPaletteUseCase(
+    generatedPaletteRepository
+  );
 
   return new Elysia({ prefix: "/chatbot" }).post(
     "/message",
@@ -55,6 +69,15 @@ export const chatbotController = (deps: ChatbotControllerDependencies) => {
                 "color" in firstItem
               ) {
                 responseType = "palette";
+                if (Array.isArray(result.assistantResponse)) {
+                  console.log({
+                    paletteColors: result.assistantResponse,
+                  });
+                  createGeneratedPaletteUseCase.execute({
+                    userId: currentUserId,
+                    colors: result.assistantResponse as PaletteColor[],
+                  });
+                }
               }
             }
           }

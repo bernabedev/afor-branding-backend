@@ -15,6 +15,7 @@ import {
 } from "./modules/auth/domain/jwt-payload.interface";
 import { chatbotModule } from "./modules/chatbot/chatbot.module";
 import { docsRoutes } from "./modules/docs";
+import { palettesModule } from "./modules/palettes/palettes.module";
 import { generateContentChatBot, generatePalette } from "./services/gemini";
 
 if (!JWT_SECRET || JWT_SECRET === "afor") {
@@ -120,6 +121,9 @@ app.use(authRoutes);
 
 const chatbotRoutes = chatbotModule({ prisma });
 app.use(chatbotRoutes);
+
+const favoritePalettesRoutes = palettesModule({ prisma });
+app.use(favoritePalettesRoutes);
 
 app.use(docsRoutes);
 

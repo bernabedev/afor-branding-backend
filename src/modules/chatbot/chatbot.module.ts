@@ -30,5 +30,6 @@ export const chatbotModule = (deps: ChatbotModuleDependencies) => {
   return chatbotController({
     startChatSessionUseCase,
     sendChatMessageUseCase,
+    prismaClient: prisma,
   });
 };
