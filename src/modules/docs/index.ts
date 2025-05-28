@@ -1,7 +1,9 @@
-import { html, Html } from "@elysiajs/html";
+import { html } from "@elysiajs/html";
 import Elysia from "elysia";
-export const docsRoutes = new Elysia().use(html()).get("/docs", () => (
-  <html>
+export const docsRoutes = new Elysia().use(html()).get(
+  "/docs",
+  () =>
+    `<html>
     <head>
       <title>HamBot API Docs</title>
       <meta charset="utf-8" />
@@ -15,5 +17,5 @@ export const docsRoutes = new Elysia().use(html()).get("/docs", () => (
       ></script>
       <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
     </body>
-  </html>
-));
+  </html>`
+);
