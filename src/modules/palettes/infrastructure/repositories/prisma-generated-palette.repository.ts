@@ -3,12 +3,19 @@ import type {
   PrismaClient,
   GeneratedPalette as PrismaGeneratedPalette,
 } from "@/generated/prisma";
+import {
+  PaginatedResult,
+  PaginateFunction,
+  paginator,
+} from "@/helpers/paginate";
 import type { PaletteColor } from "@/modules/chatbot/domain/palette.entity";
 import type { IGeneratedPaletteRepository } from "../../application/ports/generated-palette.repository";
 import type {
   GeneratedPalette,
   GeneratedPaletteCreationData,
 } from "../../domain/generated-palette.entity";
+
+const paginate: PaginateFunction = paginator({ perPage: 10 });
 
 export class PrismaGeneratedPaletteRepository
   implements IGeneratedPaletteRepository
@@ -24,13 +31,16 @@ export class PrismaGeneratedPaletteRepository
       createdAt: prismaPalette.createdAt,
     };
   }
-  async findAll({ userId }: { userId?: string }): Promise<GeneratedPalette[]> {
-    const prismaPalettes = await this.prisma.generatedPalette.findMany({
-      where: {
-        userId,
-      },
-    });
-    return prismaPalettes.map(this.mapToDomain);
+  async findAll({
+    userId,
+  }: {
+    userId?: string;
+  }): Promise<PaginatedResult<PrismaGeneratedPalette>> {
+    const result = await paginate<
+      PrismaGeneratedPalette,
+      Prisma.GeneratedPaletteFindManyArgs
+    >(this.prisma.generatedPalette, { where: { userId } });
+    return result;
   }
 
   async create(data: GeneratedPaletteCreationData): Promise<GeneratedPalette> {
