@@ -3,6 +3,11 @@ import type {
   FavoritePalette as PrismaFavoritePalette,
   GeneratedPalette as PrismaGeneratedPalette,
 } from "@/generated/prisma";
+import {
+  PaginatedResult,
+  PaginateFunction,
+  paginator,
+} from "@/helpers/paginate";
 import type { PaletteColor } from "@/modules/chatbot/domain/palette.entity";
 import type { IFavoritePaletteRepository } from "../../application/ports/favorite-palette.repository";
 import type {
@@ -10,6 +15,7 @@ import type {
   FavoritePaletteCreationData,
 } from "../../domain/favorite-palette.entity";
 import type { GeneratedPalette } from "../../domain/generated-palette.entity";
+const paginate: PaginateFunction = paginator({ perPage: 10 });
 
 export class PrismaFavoritePaletteRepository
   implements IFavoritePaletteRepository
@@ -65,15 +71,16 @@ export class PrismaFavoritePaletteRepository
     return this.mapToDomain(prismaFavorite);
   }
 
-  async findByUserId(userId: string): Promise<FavoritePalette[]> {
-    const prismaFavorites = await this.prisma.favoritePalette.findMany({
+  async findByUserId(
+    userId: string
+  ): Promise<PaginatedResult<FavoritePalette>> {
+    return paginate(this.prisma.favoritePalette, {
       where: { userId },
       include: {
         palette: true,
       },
       orderBy: { createdAt: "desc" },
     });
-    return prismaFavorites.map((pf) => this.mapToDomain(pf));
   }
 
   async findUserFavoriteByPaletteId(

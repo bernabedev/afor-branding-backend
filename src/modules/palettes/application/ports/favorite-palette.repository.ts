@@ -1,3 +1,4 @@
+import { PaginatedResult } from "@/helpers/paginate";
 import type {
   FavoritePalette,
   FavoritePaletteCreationData,
@@ -5,10 +6,10 @@ import type {
 
 export interface IFavoritePaletteRepository {
   create(data: FavoritePaletteCreationData): Promise<FavoritePalette>;
-  findByUserId(userId: string): Promise<FavoritePalette[]>; // Devolverá FavoritePalette con GeneratedPalette incluida
+  findByUserId(userId: string): Promise<PaginatedResult<FavoritePalette>>;
   findUserFavoriteByPaletteId(
     userId: string,
     paletteId: string
   ): Promise<FavoritePalette | null>;
-  delete(id: string, userId: string): Promise<boolean>; // Para quitar de favoritos
+  delete(id: string, userId: string): Promise<boolean>;
 }

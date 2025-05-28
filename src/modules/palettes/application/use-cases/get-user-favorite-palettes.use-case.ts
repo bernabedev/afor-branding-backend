@@ -1,3 +1,4 @@
+import { PaginatedResult } from "@/helpers/paginate";
 import type { FavoritePalette } from "../../domain/favorite-palette.entity";
 import type { IFavoritePaletteRepository } from "../ports/favorite-palette.repository";
 
@@ -12,7 +13,7 @@ export class GetUserFavoritePalettesUseCase {
 
   async execute(
     input: GetUserFavoritePalettesInput
-  ): Promise<FavoritePalette[]> {
+  ): Promise<PaginatedResult<FavoritePalette>> {
     return this.favoritePaletteRepository.findByUserId(input.userId);
   }
 }
