@@ -1,4 +1,7 @@
 import { PrismaClient } from "@/generated/prisma";
+import { DeleteChatUseCase } from "./application/use-cases/delete-chat.use-case";
+import { GetChatMessagesUseCase } from "./application/use-cases/get-chat-messages.use-case";
+import { GetChatsUseCase } from "./application/use-cases/get-chats.use-case";
 import { ReactToChatMessageUseCase } from "./application/use-cases/react-to-chat-message.use-case";
 import { SendChatMessageUseCase } from "./application/use-cases/send-chat-message.use-case";
 import { StartChatSessionUseCase } from "./application/use-cases/start-chat-session.use-case";
@@ -30,12 +33,21 @@ export const chatbotModule = (deps: ChatbotModuleDependencies) => {
     chatMessageRepository,
     chatRepository
   );
+  const getChatsUseCase = new GetChatsUseCase(chatRepository);
+  const deleteChatUseCase = new DeleteChatUseCase(chatRepository);
+  const getChatMessagesUseCase = new GetChatMessagesUseCase(
+    chatMessageRepository,
+    chatRepository
+  );
 
   // Controller
   return chatbotController({
     startChatSessionUseCase,
     sendChatMessageUseCase,
     reactToChatMessageUseCase,
+    getChatsUseCase,
+    deleteChatUseCase,
+    getChatMessagesUseCase,
     prismaClient: prisma,
   });
 };

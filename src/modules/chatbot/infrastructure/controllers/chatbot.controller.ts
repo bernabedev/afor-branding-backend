@@ -2,10 +2,18 @@ import { PrismaClient } from "@/generated/prisma";
 import { Elysia, t } from "elysia";
 import { CreateGeneratedPaletteUseCase } from "../../../palettes/application/use-cases/create-generated-palette.use-case";
 import { PrismaGeneratedPaletteRepository } from "../../../palettes/infrastructure/repositories/prisma-generated-palette.repository";
+import { DeleteChatUseCase } from "../../application/use-cases/delete-chat.use-case";
+import { GetChatMessagesUseCase } from "../../application/use-cases/get-chat-messages.use-case";
+import { GetChatsUseCase } from "../../application/use-cases/get-chats.use-case";
 import { ReactToChatMessageUseCase } from "../../application/use-cases/react-to-chat-message.use-case";
 import type { SendChatMessageUseCase } from "../../application/use-cases/send-chat-message.use-case";
 import type { StartChatSessionUseCase } from "../../application/use-cases/start-chat-session.use-case";
 import { PaletteColor } from "../../domain/palette.entity";
+
+const paginationQuerySchema = t.Object({
+  page: t.Optional(t.Numeric({ minimum: 1 })),
+  perPage: t.Optional(t.Numeric({ minimum: 1, maximum: 100 })),
+});
 
 const sendMessageBodySchema = t.Object({
   message: t.String({ minLength: 1 }),
@@ -16,6 +24,9 @@ interface ChatbotControllerDependencies {
   startChatSessionUseCase: StartChatSessionUseCase;
   sendChatMessageUseCase: SendChatMessageUseCase;
   reactToChatMessageUseCase: ReactToChatMessageUseCase;
+  getChatsUseCase: GetChatsUseCase;
+  deleteChatUseCase: DeleteChatUseCase;
+  getChatMessagesUseCase: GetChatMessagesUseCase;
   prismaClient: PrismaClient;
 }
 
@@ -24,6 +35,9 @@ export const chatbotController = (deps: ChatbotControllerDependencies) => {
     startChatSessionUseCase,
     sendChatMessageUseCase,
     reactToChatMessageUseCase,
+    getChatsUseCase,
+    deleteChatUseCase,
+    getChatMessagesUseCase,
     prismaClient,
   } = deps;
 
@@ -162,6 +176,109 @@ export const chatbotController = (deps: ChatbotControllerDependencies) => {
           summary: "React to a chat message (like/dislike)",
           description:
             "Allows a user to like, dislike, or remove a reaction from a message. Requires authentication.",
+          security: [{ cookieAuth: [] }],
+        },
+      }
+    )
+    .get(
+      "/chats",
+      async ({ query, userAuth, set }) => {
+        if (!userAuth) {
+          set.status = 401;
+          return { error: "Unauthorized. Login to see your chats." };
+        }
+        try {
+          const paginatedChats = await getChatsUseCase.execute({
+            page: query.page,
+            perPage: query.perPage,
+            userId: userAuth.sub,
+          });
+          return paginatedChats;
+        } catch (error: any) {
+          console.error("Get chats error:", error);
+          set.status = 500;
+          return { error: "Failed to retrieve chats." };
+        }
+      },
+      {
+        query: paginationQuerySchema,
+        detail: {
+          tags: ["Chatbot"],
+          summary: "Get chats",
+          description:
+            "Retrieves chat sessions. Authenticated users see their own chats.",
+          security: [{ cookieAuth: [] }],
+        },
+      }
+    )
+    .delete(
+      "/chats/:chatId",
+      async ({ params, userAuth, set }) => {
+        if (!userAuth) {
+          set.status = 401;
+          return { error: "Unauthorized" };
+        }
+        try {
+          const success = await deleteChatUseCase.execute({
+            chatId: params.chatId,
+            userId: userAuth.sub,
+          });
+          if (success) {
+            set.status = 204;
+            return;
+          } else {
+            set.status = 404;
+            return { error: "Chat not found or not authorized to delete." };
+          }
+        } catch (error: any) {
+          console.error("Delete chat error:", error);
+          if (error.message.includes("not found")) set.status = 404;
+          else if (error.message.includes("Unauthorized")) set.status = 403;
+          else set.status = 500;
+          return { error: error.message || "Failed to delete chat." };
+        }
+      },
+      {
+        params: t.Object({ chatId: t.String({ format: "uuid" }) }),
+        detail: {
+          tags: ["Chatbot"],
+          summary: "Delete a chat",
+          security: [{ cookieAuth: [] }],
+        },
+      }
+    )
+
+    .get(
+      "/chats/:chatId/messages",
+      async ({ params, query, userAuth, set }) => {
+        if (!userAuth) {
+          set.status = 401;
+          return { error: "Unauthorized" };
+        }
+        try {
+          const paginatedMessages = await getChatMessagesUseCase.execute({
+            chatId: params.chatId,
+            page: query.page,
+            perPage: query.perPage,
+            userId: userAuth.sub,
+          });
+          return paginatedMessages;
+        } catch (error: any) {
+          console.error("Get chat messages error:", error);
+          if (error.message.includes("not found")) set.status = 404;
+          else if (error.message.includes("Unauthorized")) set.status = 403;
+          else set.status = 500;
+          return {
+            error: error.message || "Failed to retrieve chat messages.",
+          };
+        }
+      },
+      {
+        params: t.Object({ chatId: t.String({ format: "uuid" }) }),
+        query: paginationQuerySchema,
+        detail: {
+          tags: ["Chatbot"],
+          summary: "Get messages by chatId",
           security: [{ cookieAuth: [] }],
         },
       }

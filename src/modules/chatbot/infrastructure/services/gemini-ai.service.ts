@@ -108,9 +108,6 @@ export class GeminiAiService implements IAiService {
     );
     if (!jsonText) return null;
     try {
-      // Si el schema anterior es para un objeto { colors: Palette },
-      // entonces necesitarías `JSON.parse(jsonText).colors as Palette;`
-      // Si el schema es para un array directo, esto está bien:
       return JSON.parse(jsonText) as Palette;
     } catch (e) {
       console.error("Gemini: Failed to parse palette JSON:", jsonText, e);

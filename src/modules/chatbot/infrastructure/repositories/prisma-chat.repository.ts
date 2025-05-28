@@ -1,8 +1,10 @@
 import type {
+  Prisma,
   Chat as PrismaChat,
   ChatMessage as PrismaChatMessage,
   PrismaClient,
 } from "@/generated/prisma";
+import { paginate, PaginatedResult, PaginateOptions } from "@/helpers/paginate";
 import type { IChatRepository } from "../../application/ports/chat.repository";
 import type {
   ChatMessage,
@@ -62,5 +64,43 @@ export class PrismaChatRepository implements IChatRepository {
       take: limit,
     });
     return messages.reverse().map((msg) => this.mapPrismaMessageToDomain(msg));
+  }
+  async findAll(
+    options: PaginateOptions,
+    userId?: string
+  ): Promise<PaginatedResult<Chat>> {
+    const whereClause: any = {};
+    if (userId) {
+      whereClause.userId = userId;
+    }
+
+    const paginatedResult = await paginate<PrismaChat, Prisma.ChatFindManyArgs>(
+      this.prisma.chat,
+      {
+        where: whereClause,
+        orderBy: { createdAt: "desc" },
+      },
+      options
+    );
+
+    return {
+      ...paginatedResult,
+      data: paginatedResult.data.map(this.mapPrismaChatToDomain),
+    };
+  }
+  async deleteById(chatId: string, userId?: string): Promise<boolean> {
+    if (userId) {
+      const chat = await this.prisma.chat.findFirst({
+        where: { id: chatId, userId: userId },
+      });
+      if (!chat) {
+        return false;
+      }
+    }
+
+    const result = await this.prisma.chat.deleteMany({
+      where: { id: chatId },
+    });
+    return result.count > 0;
   }
 }

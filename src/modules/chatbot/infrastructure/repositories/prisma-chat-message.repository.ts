@@ -1,8 +1,10 @@
 import type {
   MessageRole,
+  Prisma,
   ChatMessage as PrismaChatMessage,
   PrismaClient,
 } from "@/generated/prisma";
+import { paginate, PaginatedResult, PaginateOptions } from "@/helpers/paginate";
 import type { IChatMessageRepository } from "../../application/ports/chat-message.repository";
 import type {
   ChatMessage,
@@ -51,5 +53,26 @@ export class PrismaChatMessageRepository implements IChatMessageRepository {
       },
     });
     return this.mapToDomain(prismaMsg);
+  }
+  async findByChatId(
+    chatId: string,
+    options: PaginateOptions
+  ): Promise<PaginatedResult<ChatMessage>> {
+    const paginatedResult = await paginate<
+      PrismaChatMessage,
+      Prisma.ChatMessageFindManyArgs
+    >(
+      this.prisma.chatMessage,
+      {
+        where: { chatId },
+        orderBy: { createdAt: "asc" },
+      },
+      options
+    );
+
+    return {
+      ...paginatedResult,
+      data: paginatedResult.data.map(this.mapToDomain),
+    };
   }
 }

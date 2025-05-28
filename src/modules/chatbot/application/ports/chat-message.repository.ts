@@ -1,3 +1,4 @@
+import { PaginatedResult, PaginateOptions } from "@/helpers/paginate";
 import type {
   ChatMessage,
   ChatMessageCreationData,
@@ -11,4 +12,8 @@ export interface IChatMessageRepository {
     id: string,
     reaction: MessageReactionDomain | null
   ): Promise<ChatMessage>;
+  findByChatId(
+    chatId: string,
+    options: PaginateOptions
+  ): Promise<PaginatedResult<ChatMessage>>;
 }
