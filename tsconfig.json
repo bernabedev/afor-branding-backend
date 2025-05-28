@@ -4,6 +4,9 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "jsx": "react",
+    "jsxFactory": "Html.createElement",
+    "jsxFragmentFactory": "Html.Fragment",
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
     /* Projects */

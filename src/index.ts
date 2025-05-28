@@ -14,6 +14,7 @@ import {
   JwtSignerVerifier,
 } from "./modules/auth/domain/jwt-payload.interface";
 import { chatbotModule } from "./modules/chatbot/chatbot.module";
+import { docsRoutes } from "./modules/docs";
 import { generateContentChatBot, generatePalette } from "./services/gemini";
 
 if (!JWT_SECRET || JWT_SECRET === "afor") {
@@ -24,8 +25,6 @@ if (!JWT_SECRET || JWT_SECRET === "afor") {
 
 const prisma = new PrismaClient();
 const app = new Elysia();
-
-console.log({ ALLOWED_ORIGINS: ALLOWED_ORIGINS?.split(",") || [] });
 
 app
   .use(Logestic.preset("fancy"))
@@ -59,6 +58,7 @@ app
           },
         ],
       },
+      exclude: ["/docs", "/health", "/"],
     })
   )
   .decorate("prisma", prisma)
@@ -120,6 +120,8 @@ app.use(authRoutes);
 
 const chatbotRoutes = chatbotModule({ prisma });
 app.use(chatbotRoutes);
+
+app.use(docsRoutes);
 
 app.post(
   "/generate-palette",
