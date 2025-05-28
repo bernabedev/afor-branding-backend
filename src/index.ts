@@ -9,7 +9,10 @@ import { Logestic } from "logestic";
 import { PrismaClient } from "./generated/prisma";
 import { ALLOWED_ORIGINS, JWT_SECRET, PORT } from "./helpers/constants";
 import { authModule } from "./modules/auth/auth.module";
-import { JwtSignerVerifier } from "./modules/auth/domain/jwt-payload.interface";
+import {
+  JwtAuthPayload,
+  JwtSignerVerifier,
+} from "./modules/auth/domain/jwt-payload.interface";
 import { chatbotModule } from "./modules/chatbot/chatbot.module";
 import { generateContentChatBot, generatePalette } from "./services/gemini";
 
@@ -63,6 +66,23 @@ app
       secret: JWT_SECRET,
     })
   )
+  .derive(async ({ cookie, jwtAuth }) => {
+    if (!cookie.auth || !cookie.auth.value) {
+      return { userAuth: null };
+    }
+    try {
+      const payload = await jwtAuth.verify(cookie.auth.value);
+      if (!payload) {
+        cookie.auth.remove();
+        return { userAuth: null };
+      }
+      return { userAuth: payload as JwtAuthPayload };
+    } catch (e) {
+      console.error("Error verifying token in derive:", e);
+      cookie.auth.remove();
+      return { userAuth: null };
+    }
+  })
   .onStart(async () => {
     try {
       await prisma.$connect();

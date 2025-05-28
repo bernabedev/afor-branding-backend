@@ -7,4 +7,4 @@ export interface Chat {
   createdAt: Date;
 }
 
-export type ChatCreationData = Omit<Chat, "id" | "messages" | "createdAt">;
+export type ChatCreationData = Pick<Chat, "userId">;

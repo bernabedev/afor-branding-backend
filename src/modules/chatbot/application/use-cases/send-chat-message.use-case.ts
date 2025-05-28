@@ -9,7 +9,7 @@ import type { IChatRepository } from "../ports/chat.repository";
 
 interface SendChatMessageInput {
   chatId: string;
-  userId?: string;
+  userId?: string | null;
   messageContent: string;
 }
 
@@ -44,36 +44,21 @@ export class SendChatMessageUseCase {
     }
 
     if (chat.userId && input.userId && chat.userId !== input.userId) {
-      throw new Error("Unauthorized to send message to this chat.");
+      throw new Error("Access denied to this chat session.");
     }
 
-    let userMessageEntity: ChatMessage | null = null;
-    if (chat.userId) {
-      userMessageEntity = await this.chatMessageRepository.create({
-        chatId: input.chatId,
-        role: MessageRoleDomain.USER,
-        content: input.messageContent,
-      });
-    } else {
-      userMessageEntity = {
-        id: crypto.randomUUID(),
-        chatId: input.chatId,
-        role: MessageRoleDomain.USER,
-        content: input.messageContent,
-        createdAt: new Date(),
-      };
-    }
+    const userMessageEntity = await this.chatMessageRepository.create({
+      chatId: input.chatId,
+      role: MessageRoleDomain.USER,
+      content: input.messageContent,
+    });
 
-    let historyToAI: ChatTurn[];
-    if (chat.userId) {
-      const dbHistory = await this.chatRepository.getHistory(
-        input.chatId,
-        MAX_HISTORY_TURNS
-      );
-      historyToAI = this.convertDomainMessagesToChatTurns(dbHistory);
-    } else {
-      historyToAI = [{ role: "user", parts: [{ text: input.messageContent }] }];
-    }
+    const dbHistory = await this.chatRepository.getHistory(
+      input.chatId,
+      MAX_HISTORY_TURNS
+    );
+    console.log({ dbHistoryLength: dbHistory.length });
+    const historyToAI = this.convertDomainMessagesToChatTurns(dbHistory);
 
     const assistantResponse = await this.aiService.generateChatContent(
       historyToAI,
@@ -81,11 +66,7 @@ export class SendChatMessageUseCase {
     );
 
     let assistantMessageEntity: ChatMessage | undefined;
-    if (
-      assistantResponse &&
-      typeof assistantResponse === "string" &&
-      chat.userId
-    ) {
+    if (assistantResponse && typeof assistantResponse === "string") {
       assistantMessageEntity = await this.chatMessageRepository.create({
         chatId: input.chatId,
         role: MessageRoleDomain.ASSISTANT,

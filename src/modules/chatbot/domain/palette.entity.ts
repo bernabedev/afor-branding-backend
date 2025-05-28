@@ -1,7 +1,7 @@
 export interface PaletteColor {
   value: number;
   name: string;
-  color: string; // hex
+  color: string; // Hex
 }
 
 export type Palette = PaletteColor[];

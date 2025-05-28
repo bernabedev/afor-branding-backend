@@ -82,6 +82,7 @@ export const chatbotController = (deps: ChatbotControllerDependencies) => {
     {
       body: sendMessageBodySchema,
       detail: {
+        tags: ["Chatbot"],
         summary: "Send a message to the chatbot",
         description:
           "Starts a new chat or continues an existing one. Saves history for logged-in users.",

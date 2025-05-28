@@ -29,7 +29,7 @@ export class PrismaChatMessageRepository implements IChatMessageRepository {
     const prismaMsg = await this.prisma.chatMessage.create({
       data: {
         chatId: data.chatId,
-        role: data.role as MessageRole,
+        role: data.role as MessageRole, // Prisma enum
         content: data.content,
       },
     });

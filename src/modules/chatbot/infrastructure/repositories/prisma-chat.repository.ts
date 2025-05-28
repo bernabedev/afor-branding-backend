@@ -1,4 +1,4 @@
-import {
+import type {
   Chat as PrismaChat,
   ChatMessage as PrismaChatMessage,
   PrismaClient,
@@ -6,6 +6,7 @@ import {
 import type { IChatRepository } from "../../application/ports/chat.repository";
 import type {
   ChatMessage,
+  MessageReactionDomain,
   MessageRoleDomain,
 } from "../../domain/chat-message.entity";
 import type { Chat, ChatCreationData } from "../../domain/chat.entity";
@@ -17,10 +18,9 @@ export class PrismaChatRepository implements IChatRepository {
     return {
       id: prismaMsg.id,
       chatId: prismaMsg.chatId,
-
       role: prismaMsg.role as MessageRoleDomain,
       content: prismaMsg.content,
-      reaction: prismaMsg.reaction as ChatMessage["reaction"],
+      reaction: prismaMsg.reaction as MessageReactionDomain | null | undefined,
       createdAt: prismaMsg.createdAt,
     };
   }
@@ -31,7 +31,9 @@ export class PrismaChatRepository implements IChatRepository {
     return {
       id: prismaChat.id,
       userId: prismaChat.userId,
-      messages: prismaChat.messages?.map(this.mapPrismaMessageToDomain) || [],
+      messages:
+        prismaChat.messages?.map((msg) => this.mapPrismaMessageToDomain(msg)) ||
+        [],
       createdAt: prismaChat.createdAt,
     };
   }
@@ -39,18 +41,15 @@ export class PrismaChatRepository implements IChatRepository {
   async findById(chatId: string): Promise<Chat | null> {
     const prismaChat = await this.prisma.chat.findUnique({
       where: { id: chatId },
-      include: { messages: { orderBy: { createdAt: "asc" } } },
+      include: { messages: { orderBy: { createdAt: "asc" }, take: 50 } }, // Limitar mensajes incluidos
     });
     return prismaChat ? this.mapPrismaChatToDomain(prismaChat) : null;
   }
 
   async create(data: ChatCreationData): Promise<Chat> {
-    if (!data.userId) {
-      throw new Error("User ID is required.");
-    }
     const prismaChat = await this.prisma.chat.create({
       data: {
-        userId: data.userId,
+        userId: data.userId, // Puede ser null para chats anónimos
       },
     });
     return this.mapPrismaChatToDomain(prismaChat);
@@ -62,6 +61,6 @@ export class PrismaChatRepository implements IChatRepository {
       orderBy: { createdAt: "desc" },
       take: limit,
     });
-    return messages.reverse().map(this.mapPrismaMessageToDomain);
+    return messages.reverse().map((msg) => this.mapPrismaMessageToDomain(msg));
   }
 }

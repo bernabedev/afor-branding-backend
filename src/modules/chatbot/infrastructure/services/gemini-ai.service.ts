@@ -1,11 +1,11 @@
 import {
+  Type as GenAiType,
   GoogleGenAI,
   HarmBlockThreshold,
   HarmCategory,
-  Type,
   type Content,
   type GenerateContentResponse,
-  type Part,
+  type SchemaUnion,
   type Tool,
 } from "@google/genai";
 import { GEMINI_API_KEY, GEMINI_MODEL } from "../../../../helpers/constants";
@@ -17,8 +17,6 @@ import type {
   GeminiFunctionCallResponse,
 } from "../../domain/gemini-response.type";
 import type { Palette } from "../../domain/palette.entity";
-
-const anonymousChatHistories: Map<string, Content[]> = new Map();
 
 export class GeminiAiService implements IAiService {
   private ai: GoogleGenAI;
@@ -32,26 +30,20 @@ export class GeminiAiService implements IAiService {
     this.modelName = GEMINI_MODEL;
   }
 
-  generateInitialAssistantPrompt(): string {
-    return PROMPTS.assistant;
-  }
-
   private async _generateSimpleContent(
     prompt: string,
-    responseMimeType: "application/json" | "text/plain" = "application/json"
+    responseMimeType: "application/json" | "text/plain" = "application/json",
+    responseSchema?: SchemaUnion
   ): Promise<string | null> {
     try {
-      const request = {
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: {
-          responseMimeType: responseMimeType,
-        },
-      };
-
       const result: GenerateContentResponse =
         await this.ai.models.generateContent({
           model: this.modelName,
-          ...request,
+          contents: prompt,
+          config: {
+            responseMimeType: responseMimeType,
+            responseSchema: responseSchema,
+          },
         });
 
       const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -91,10 +83,34 @@ export class GeminiAiService implements IAiService {
   ): Promise<Palette | null> {
     const jsonText = await this._generateSimpleContent(
       PROMPTS.generatePalette(description),
-      "application/json"
+      "application/json",
+      {
+        type: GenAiType.ARRAY,
+        items: {
+          type: GenAiType.OBJECT,
+          properties: {
+            value: {
+              type: GenAiType.INTEGER,
+              description: "Value of the color",
+            },
+            name: {
+              type: GenAiType.STRING,
+              description: "Name of the color",
+            },
+            color: {
+              type: GenAiType.STRING,
+              description: "Color in hex format",
+            },
+          },
+          required: ["value", "name", "color"],
+        },
+      }
     );
     if (!jsonText) return null;
     try {
+      // Si el schema anterior es para un objeto { colors: Palette },
+      // entonces necesitarías `JSON.parse(jsonText).colors as Palette;`
+      // Si el schema es para un array directo, esto está bien:
       return JSON.parse(jsonText) as Palette;
     } catch (e) {
       console.error("Gemini: Failed to parse palette JSON:", jsonText, e);
@@ -107,7 +123,28 @@ export class GeminiAiService implements IAiService {
   ): Promise<Font[] | null> {
     const jsonText = await this._generateSimpleContent(
       PROMPTS.generateFonts(description),
-      "application/json"
+      "application/json",
+      {
+        type: GenAiType.ARRAY,
+        items: {
+          type: GenAiType.OBJECT,
+          properties: {
+            name: {
+              type: GenAiType.STRING,
+              description: "The font family name",
+            },
+            key: {
+              type: GenAiType.STRING,
+              description: "Unique key identifier",
+            },
+            type: {
+              type: GenAiType.STRING,
+              description: "Either 'heading' or 'body'",
+            },
+          },
+          required: ["name", "key", "type"],
+        },
+      } as SchemaUnion
     );
     if (!jsonText) return null;
     try {
@@ -118,20 +155,9 @@ export class GeminiAiService implements IAiService {
     }
   }
 
-  async generatePalette(
-    description: string
-  ): Promise<GeminiChatResponse | null> {
-    return this._generatePaletteFromAI(description);
-  }
-
-  async generateFonts(description: string): Promise<GeminiChatResponse | null> {
-    return this._generateFontsFromAI(description);
-  }
-
   async generateChatContent(
     dbHistory: ChatTurn[],
-    newMessage: string,
-    chatIdForAnonymous?: string
+    newMessage: string
   ): Promise<GeminiChatResponse | null> {
     const tools: Tool[] = [
       {
@@ -141,10 +167,10 @@ export class GeminiAiService implements IAiService {
             description:
               "Generate a palette of colors based on a company description",
             parameters: {
-              type: Type.OBJECT,
+              type: GenAiType.OBJECT,
               properties: {
                 description: {
-                  type: Type.STRING,
+                  type: GenAiType.STRING,
                   description: "Company description",
                 },
               },
@@ -156,10 +182,10 @@ export class GeminiAiService implements IAiService {
             description:
               "Generate two complementary typefaces (heading and body) based on a company description",
             parameters: {
-              type: Type.OBJECT,
+              type: GenAiType.OBJECT,
               properties: {
                 description: {
-                  type: Type.STRING,
+                  type: GenAiType.STRING,
                   description: "Company description",
                 },
               },
@@ -170,64 +196,47 @@ export class GeminiAiService implements IAiService {
       },
     ];
 
-    let conversationHistory: Content[] = [];
-
-    if (chatIdForAnonymous) {
-      conversationHistory =
-        anonymousChatHistories.get(chatIdForAnonymous) || [];
-    } else {
-      conversationHistory = dbHistory.map((turn) => ({
-        role: turn.role === "user" ? "user" : "model",
-        parts: turn.parts.map((part) => ({ text: part.text })),
-      }));
+    const conversationHistory: Content[] = dbHistory.map((turn) => ({
+      role: turn.role === "user" ? "user" : "model",
+      parts: turn.parts.map((part) => ({ text: part.text })),
+    }));
+    console.log({ dbHistoryLength: dbHistory.length });
+    for (const turn of conversationHistory) {
+      console.log({ message: turn.parts?.[0].text });
     }
-
-    const systemInstructionContent: Content = {
-      role: "system",
-      parts: [{ text: this.generateInitialAssistantPrompt() }],
-    };
 
     const currentConversationContents: Content[] = [
       ...conversationHistory,
       { role: "user", parts: [{ text: newMessage }] },
     ];
 
-    if (chatIdForAnonymous) {
-      anonymousChatHistories.set(chatIdForAnonymous, [
-        ...currentConversationContents,
-      ]);
-    }
-
-    const request = {
-      contents: currentConversationContents,
-      tools: tools,
-      systemInstruction: systemInstructionContent,
-
-      safetySettings: [
-        {
-          category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-          threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-        },
-        {
-          category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-          threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-        },
-        {
-          category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-          threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-        },
-        {
-          category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-          threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-        },
-      ],
-    };
-
     try {
       const result: GenerateContentResponse =
         await this.ai.models.generateContent({
           model: this.modelName,
-          ...request,
+          contents: currentConversationContents,
+          config: {
+            tools: tools,
+            systemInstruction: PROMPTS.assistant,
+            safetySettings: [
+              {
+                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+              },
+            ],
+          },
         });
 
       const candidate = result.candidates?.[0];
@@ -241,11 +250,11 @@ export class GeminiAiService implements IAiService {
         return null;
       }
 
-      const functionCallPart = candidate.content?.parts?.find(
-        (part) => part.functionCall
-      );
-      if (functionCallPart && functionCallPart.functionCall) {
-        const { name, args } = functionCallPart.functionCall;
+      console.log({ functionCalls: result.functionCalls });
+
+      if (result.functionCalls?.length) {
+        const firstCall = result.functionCalls[0];
+        const { name, args } = firstCall;
         console.log(`Gemini Chat: Function call requested: ${name}`, args);
         let functionCallResultData: GeminiFunctionCallResponse | null = null;
 
@@ -259,44 +268,14 @@ export class GeminiAiService implements IAiService {
           );
         }
 
-        const functionResponsePartContent: Part = {
-          functionResponse: {
-            name,
-            response: {
-              name,
-              content: functionCallResultData || {
-                error: "Function execution failed or no data",
-              },
-            },
-          },
-        };
-
-        if (chatIdForAnonymous) {
-          const currentAnonHist =
-            anonymousChatHistories.get(chatIdForAnonymous) || [];
-          anonymousChatHistories.set(chatIdForAnonymous, [
-            ...currentAnonHist,
-            { role: "model", parts: [functionCallPart] },
-            { role: "function", parts: [functionResponsePartContent] },
-          ]);
-        }
-
         return functionCallResultData;
       }
 
       const textResponse = candidate.content?.parts
-        ?.map((part) => part.text)
+        ?.map((part) => part.text || "")
         .join("")
         .trim();
       if (textResponse) {
-        if (chatIdForAnonymous) {
-          const currentAnonHist =
-            anonymousChatHistories.get(chatIdForAnonymous) || [];
-          anonymousChatHistories.set(chatIdForAnonymous, [
-            ...currentAnonHist,
-            { role: "model", parts: [{ text: textResponse }] },
-          ]);
-        }
         return textResponse;
       }
 

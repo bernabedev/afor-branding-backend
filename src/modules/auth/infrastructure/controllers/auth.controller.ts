@@ -3,7 +3,6 @@ import type { ITokenService } from "../../application/ports/token.service";
 import type { GetProfileUseCase } from "../../application/use-cases/get-profile.use-case";
 import type { LoginUserUseCase } from "../../application/use-cases/login-user.use-case";
 import type { RegisterUserUseCase } from "../../application/use-cases/register-user.use-case";
-import type { JwtAuthPayload } from "../../domain/jwt-payload.interface";
 
 const registerBodySchema = t.Object({
   email: t.String({ format: "email" }),
@@ -80,37 +79,21 @@ export const authController = (deps: AuthControllerDependencies) => {
       },
       { body: loginBodySchema, detail: { tags: ["Auth"], summary: "Login" } }
     )
-
-    .derive(async ({ cookie, set }) => {
-      if (!cookie.auth || !cookie.auth.value) {
-        return { userAuth: null };
-      }
-      const payload = await tokenServiceForVerification.verify(
-        cookie.auth.value
-      );
-      if (!payload) {
-        cookie.auth.remove();
-        return { userAuth: null };
-      }
-      return { userAuth: payload as JwtAuthPayload };
-    })
     .get(
       "/me",
-      async ({ userAuth, set }) => {
+      async ({ userAuth, status }) => {
+        console.log({ userAuth });
         if (!userAuth) {
-          set.status = 401;
-          return { error: "Unauthorized" };
+          return status(401, { error: "Unauthorized" });
         }
         try {
           const profile = await getProfileUseCase.execute(userAuth.sub);
           if (!profile) {
-            set.status = 404;
-            return { error: "Profile not found" };
+            return status(404, { error: "Profile not found" });
           }
           return profile;
         } catch (error: any) {
-          set.status = 500;
-          return { error: "Failed to retrieve profile" };
+          return status(500, { error: "Failed to retrieve profile" });
         }
       },
       {
@@ -120,9 +103,17 @@ export const authController = (deps: AuthControllerDependencies) => {
         },
       }
     )
-    .post("/logout", ({ cookie, set }) => {
-      cookie.auth.remove();
-      set.status = 200;
-      return { message: "Logged out successfully" };
-    });
+    .post(
+      "/logout",
+      ({ cookie, status }) => {
+        cookie.auth.remove();
+        return status(200, { message: "Logged out successfully" });
+      },
+      {
+        detail: {
+          tags: ["Auth"],
+          summary: "Logout",
+        },
+      }
+    );
 };
