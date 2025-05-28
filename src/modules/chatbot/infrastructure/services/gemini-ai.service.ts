@@ -200,10 +200,6 @@ export class GeminiAiService implements IAiService {
       role: turn.role === "user" ? "user" : "model",
       parts: turn.parts.map((part) => ({ text: part.text })),
     }));
-    console.log({ dbHistoryLength: dbHistory.length });
-    for (const turn of conversationHistory) {
-      console.log({ message: turn.parts?.[0].text });
-    }
 
     const currentConversationContents: Content[] = [
       ...conversationHistory,
@@ -249,8 +245,6 @@ export class GeminiAiService implements IAiService {
         }
         return null;
       }
-
-      console.log({ functionCalls: result.functionCalls });
 
       if (result.functionCalls?.length) {
         const firstCall = result.functionCalls[0];

@@ -57,7 +57,6 @@ export class SendChatMessageUseCase {
       input.chatId,
       MAX_HISTORY_TURNS
     );
-    console.log({ dbHistoryLength: dbHistory.length });
     const historyToAI = this.convertDomainMessagesToChatTurns(dbHistory);
 
     const assistantResponse = await this.aiService.generateChatContent(
