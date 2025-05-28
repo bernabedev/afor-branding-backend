@@ -1,7 +1,7 @@
 import { PrismaClient } from "@/generated/prisma";
-import { CreateGeneratedPaletteUseCase } from "@/modules/palettes/application/use-cases/create-generated-palette.use-case";
-import { PrismaGeneratedPaletteRepository } from "@/modules/palettes/infrastructure/repositories/prisma-generated-palette.repository";
 import { Elysia, t } from "elysia";
+import { CreateGeneratedPaletteUseCase } from "../../../palettes/application/use-cases/create-generated-palette.use-case";
+import { PrismaGeneratedPaletteRepository } from "../../../palettes/infrastructure/repositories/prisma-generated-palette.repository";
 import type { SendChatMessageUseCase } from "../../application/use-cases/send-chat-message.use-case";
 import type { StartChatSessionUseCase } from "../../application/use-cases/start-chat-session.use-case";
 import { PaletteColor } from "../../domain/palette.entity";
