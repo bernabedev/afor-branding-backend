@@ -25,6 +25,8 @@ if (!JWT_SECRET || JWT_SECRET === "afor") {
 const prisma = new PrismaClient();
 const app = new Elysia();
 
+console.log({ ALLOWED_ORIGINS: ALLOWED_ORIGINS?.split(",") || [] });
+
 app
   .use(Logestic.preset("fancy"))
   .use(rateLimit())
@@ -32,6 +34,7 @@ app
     cors({
       origin: ALLOWED_ORIGINS?.split(",") || [],
       credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     })
   )
   .use(
