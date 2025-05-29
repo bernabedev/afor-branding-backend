@@ -1,4 +1,6 @@
 import { PrismaClient } from "@/generated/prisma";
+import { JWT_SECRET } from "@/helpers/constants";
+import { authPlugin } from "@/modules/auth/infrastructure/plugins/auth.plugin";
 import { Elysia, t } from "elysia";
 import { CreateGeneratedPaletteUseCase } from "../../../palettes/application/use-cases/create-generated-palette.use-case";
 import { PrismaGeneratedPaletteRepository } from "../../../palettes/infrastructure/repositories/prisma-generated-palette.repository";
@@ -8,6 +10,7 @@ import { GetChatsUseCase } from "../../application/use-cases/get-chats.use-case"
 import { ReactToChatMessageUseCase } from "../../application/use-cases/react-to-chat-message.use-case";
 import type { SendChatMessageUseCase } from "../../application/use-cases/send-chat-message.use-case";
 import type { StartChatSessionUseCase } from "../../application/use-cases/start-chat-session.use-case";
+import { MessageReactionDomain } from "../../domain/chat-message.entity";
 
 const paginationQuerySchema = t.Object({
   page: t.Optional(t.Numeric({ minimum: 1 })),
@@ -49,6 +52,7 @@ export const chatbotController = (deps: ChatbotControllerDependencies) => {
   );
 
   return new Elysia({ prefix: "/chatbot" })
+    .use(authPlugin(JWT_SECRET))
     .post(
       "/message",
       async ({ body, set, userAuth }) => {
@@ -136,7 +140,7 @@ export const chatbotController = (deps: ChatbotControllerDependencies) => {
         try {
           const updatedMessage = await reactToChatMessageUseCase.execute({
             messageId: params.messageId,
-            reaction: body.reaction,
+            reaction: body.reaction as MessageReactionDomain,
             userId: userAuth.sub,
           });
           return {

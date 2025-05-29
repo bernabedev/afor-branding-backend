@@ -1,8 +1,10 @@
+import { JWT_SECRET } from "@/helpers/constants";
 import { Elysia, t } from "elysia";
 import type { ITokenService } from "../../application/ports/token.service";
 import type { GetProfileUseCase } from "../../application/use-cases/get-profile.use-case";
 import type { LoginUserUseCase } from "../../application/use-cases/login-user.use-case";
 import type { RegisterUserUseCase } from "../../application/use-cases/register-user.use-case";
+import { authPlugin } from "../plugins/auth.plugin";
 
 const registerBodySchema = t.Object({
   email: t.String({ format: "email" }),
@@ -31,6 +33,7 @@ export const authController = (deps: AuthControllerDependencies) => {
   } = deps;
 
   return new Elysia({ prefix: "/auth" })
+    .use(authPlugin(JWT_SECRET))
     .post(
       "/register",
       async ({ body, set }) => {

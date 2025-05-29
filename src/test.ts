@@ -14,12 +14,13 @@ const sendMessage = async () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message: message, ...(chatId ? { chatId } : {}) }),
+      body: JSON.stringify({ message, ...(chatId ? { chatId } : {}) }),
     });
     const data = await res.json();
     if (!chatId && data.chatId) {
       chatId = data.chatId;
     }
+
     console.log({ data, chatId });
   }
 };

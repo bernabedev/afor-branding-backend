@@ -1,3 +1,5 @@
+import { JWT_SECRET } from "@/helpers/constants";
+import { authPlugin } from "@/modules/auth/infrastructure/plugins/auth.plugin";
 import { AddFavoritePaletteUseCase } from "@/modules/palettes/application/use-cases/add-favorite-palette.use-case";
 import { CreateGeneratedPaletteUseCase } from "@/modules/palettes/application/use-cases/create-generated-palette.use-case";
 import { GetPalettesUseCase } from "@/modules/palettes/application/use-cases/get-palletes.use-case";
@@ -27,6 +29,7 @@ export const palettesController = (deps: PalettesControllerDependencies) => {
   } = deps;
 
   return new Elysia({ prefix: "/palettes" })
+    .use(authPlugin(JWT_SECRET))
     .get(
       "/",
       ({ userAuth }) => {

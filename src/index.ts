@@ -1,6 +1,4 @@
-import { cookie } from "@elysiajs/cookie";
 import { cors } from "@elysiajs/cors";
-import { jwt } from "@elysiajs/jwt";
 import { swagger } from "@elysiajs/swagger";
 import { Elysia, t } from "elysia";
 import { rateLimit } from "elysia-rate-limit";
@@ -9,10 +7,7 @@ import { Logestic } from "logestic";
 import { PrismaClient } from "./generated/prisma";
 import { ALLOWED_ORIGINS, JWT_SECRET, PORT } from "./helpers/constants";
 import { authModule } from "./modules/auth/auth.module";
-import {
-  JwtAuthPayload,
-  JwtSignerVerifier,
-} from "./modules/auth/domain/jwt-payload.interface";
+import { JwtSignerVerifier } from "./modules/auth/domain/jwt-payload.interface";
 import { chatbotModule } from "./modules/chatbot/chatbot.module";
 import { docsRoutes } from "./modules/docs";
 import { palettesModule } from "./modules/palettes/palettes.module";
@@ -25,6 +20,7 @@ if (!JWT_SECRET || JWT_SECRET === "afor") {
 }
 
 const prisma = new PrismaClient();
+
 const app = new Elysia();
 
 app
@@ -63,30 +59,6 @@ app
     })
   )
   .decorate("prisma", prisma)
-  .use(cookie())
-  .use(
-    jwt({
-      name: "jwtAuth",
-      secret: JWT_SECRET,
-    })
-  )
-  .derive({ as: "scoped" }, async ({ cookie, jwtAuth }) => {
-    if (!cookie.auth || !cookie.auth.value) {
-      return { userAuth: null };
-    }
-    try {
-      const payload = await jwtAuth.verify(cookie.auth.value);
-      if (!payload) {
-        cookie.auth.remove();
-        return { userAuth: null };
-      }
-      return { userAuth: payload as JwtAuthPayload };
-    } catch (e) {
-      console.error("Error verifying token in derive:", e);
-      cookie.auth.remove();
-      return { userAuth: null };
-    }
-  })
   .onStart(async () => {
     try {
       await prisma.$connect();
@@ -109,8 +81,8 @@ app.use(authRoutes);
 const chatbotRoutes = chatbotModule({ prisma });
 app.use(chatbotRoutes);
 
-const favoritePalettesRoutes = palettesModule({ prisma });
-app.use(favoritePalettesRoutes);
+const palettesRoutes = palettesModule({ prisma });
+app.use(palettesRoutes);
 
 app.use(docsRoutes);
 
