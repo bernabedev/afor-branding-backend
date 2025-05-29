@@ -1,10 +1,10 @@
 import { PrismaClient } from "@/generated/prisma";
-import { palettesController } from "../chatbot/infrastructure/controllers/palettes.controller";
 import { AddFavoritePaletteUseCase } from "./application/use-cases/add-favorite-palette.use-case";
 import { CreateGeneratedPaletteUseCase } from "./application/use-cases/create-generated-palette.use-case";
 import { GetPalettesUseCase } from "./application/use-cases/get-palletes.use-case";
 import { GetUserFavoritePalettesUseCase } from "./application/use-cases/get-user-favorite-palettes.use-case";
 import { RemoveFavoritePaletteUseCase } from "./application/use-cases/remove-favorite-palette.use-case";
+import { palettesController } from "./infrastructure/controllers/palettes.controller";
 import { PrismaFavoritePaletteRepository } from "./infrastructure/repositories/prisma-favorite-palette.repository";
 import { PrismaGeneratedPaletteRepository } from "./infrastructure/repositories/prisma-generated-palette.repository";
 
