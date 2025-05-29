@@ -26,7 +26,12 @@ const app = new Elysia();
 
 app
   .use(Logestic.preset("fancy"))
-  .use(rateLimit())
+  .use(
+    rateLimit({
+      max: 100,
+      duration: 60 * 10 * 1000, // 10 minutes
+    })
+  )
   .use(
     cors({
       origin: ALLOWED_ORIGINS?.split(",") || [],
