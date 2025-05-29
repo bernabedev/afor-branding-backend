@@ -3,8 +3,8 @@ import type {
   FavoritePalette as PrismaFavoritePalette,
   GeneratedPalette as PrismaGeneratedPalette,
 } from "@/generated/prisma";
-import { paginate, PaginatedResult } from "@/helpers/paginate";
 import type { PaletteColor } from "@/modules/chatbot/domain/palette.entity";
+import { paginate, PaginatedResult } from "@helpers/paginate";
 import type { IFavoritePaletteRepository } from "../../application/ports/favorite-palette.repository";
 import type {
   FavoritePalette,
