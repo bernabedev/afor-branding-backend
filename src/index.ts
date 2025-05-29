@@ -8,6 +8,7 @@ import { PrismaClient } from "./generated/prisma";
 import { ALLOWED_ORIGINS, JWT_SECRET, PORT } from "./helpers/constants";
 import { authModule } from "./modules/auth/auth.module";
 import { JwtSignerVerifier } from "./modules/auth/domain/jwt-payload.interface";
+import { authPlugin } from "./modules/auth/infrastructure/plugins/auth.plugin";
 import { chatbotModule } from "./modules/chatbot/chatbot.module";
 import { docsRoutes } from "./modules/docs";
 import { palettesModule } from "./modules/palettes/palettes.module";
@@ -59,6 +60,7 @@ app
     })
   )
   .decorate("prisma", prisma)
+  .use(authPlugin(JWT_SECRET))
   .onStart(async () => {
     try {
       await prisma.$connect();

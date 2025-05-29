@@ -85,7 +85,6 @@ export const authController = (deps: AuthControllerDependencies) => {
     .get(
       "/me",
       async ({ userAuth, status }) => {
-        console.log({ userAuth });
         if (!userAuth) {
           return status(401, { error: "Unauthorized" });
         }
