@@ -2,8 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@helpers/*": ["src/helpers/*"]
+      "@/*": ["src/*"]
     },
     "jsx": "react",
     "jsxFactory": "Html.createElement",

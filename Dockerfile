@@ -22,6 +22,7 @@ RUN apt-get update -y && \
 ENV NODE_ENV=production
 ENV PORT=3000
 
+COPY --from=builder /usr/src/app/tsconfig.json ./tsconfig.json
 COPY --from=builder /usr/src/app/package.json ./package.json
 COPY --from=builder /usr/src/app/bun.lock ./bun.lock
 COPY --from=builder /usr/src/app/node_modules ./node_modules
