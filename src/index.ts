@@ -70,7 +70,7 @@ app
       secret: JWT_SECRET,
     })
   )
-  .derive(async ({ cookie, jwtAuth }) => {
+  .derive({ as: "scoped" }, async ({ cookie, jwtAuth }) => {
     if (!cookie.auth || !cookie.auth.value) {
       return { userAuth: null };
     }

@@ -8,7 +8,6 @@ import { GetChatsUseCase } from "../../application/use-cases/get-chats.use-case"
 import { ReactToChatMessageUseCase } from "../../application/use-cases/react-to-chat-message.use-case";
 import type { SendChatMessageUseCase } from "../../application/use-cases/send-chat-message.use-case";
 import type { StartChatSessionUseCase } from "../../application/use-cases/start-chat-session.use-case";
-import { PaletteColor } from "../../domain/palette.entity";
 
 const paginationQuerySchema = t.Object({
   page: t.Optional(t.Numeric({ minimum: 1 })),
@@ -72,6 +71,15 @@ export const chatbotController = (deps: ChatbotControllerDependencies) => {
             result.assistantResponse &&
             typeof result.assistantResponse !== "string"
           ) {
+            if ("colors" in result.assistantResponse) {
+              responseType = "palette";
+              createGeneratedPaletteUseCase.execute({
+                userId: currentUserId,
+                colors: result.assistantResponse.colors,
+                name: result.assistantResponse.name,
+                description: result.assistantResponse.description,
+              });
+            }
             if (
               Array.isArray(result.assistantResponse) &&
               result.assistantResponse.length > 0
@@ -84,21 +92,6 @@ export const chatbotController = (deps: ChatbotControllerDependencies) => {
                   "type" in firstItem
                 ) {
                   responseType = "fonts";
-                } else if (
-                  "value" in firstItem &&
-                  "name" in firstItem &&
-                  "color" in firstItem
-                ) {
-                  responseType = "palette";
-                  if (Array.isArray(result.assistantResponse)) {
-                    console.log({
-                      paletteColors: result.assistantResponse,
-                    });
-                    createGeneratedPaletteUseCase.execute({
-                      userId: currentUserId,
-                      colors: result.assistantResponse as PaletteColor[],
-                    });
-                  }
                 }
               }
             }

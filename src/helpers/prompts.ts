@@ -93,6 +93,9 @@ export const PROMPTS = {
       • "name": the official color name (e.g., "Mediterranean Sea", "Pale Flower", "Jewel Weed") — do not include the company or palette name  
       • "color": the hexadecimal code (e.g., "#3A7BD5")
     5. If the description is insufficient to generate an on-brand palette, generate a random but accessible monochromatic palette of nine shades following the same format.
+    6. Add a name for the palette (e.g., "Mediterranean Sea")
+    7. Add a description for the palette (e.g., "A sober and refined palette that conveys sophistication, balance, and professionalism. Ideal for brands seeking to project trust through simplicity.")
+    
 
     Important:
     - The response must be a valid JSON array of objects.

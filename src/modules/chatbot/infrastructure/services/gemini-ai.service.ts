@@ -85,24 +85,37 @@ export class GeminiAiService implements IAiService {
       PROMPTS.generatePalette(description),
       "application/json",
       {
-        type: GenAiType.ARRAY,
-        items: {
-          type: GenAiType.OBJECT,
-          properties: {
-            value: {
-              type: GenAiType.INTEGER,
-              description: "Value of the color",
-            },
-            name: {
-              type: GenAiType.STRING,
-              description: "Name of the color",
-            },
-            color: {
-              type: GenAiType.STRING,
-              description: "Color in hex format",
+        type: GenAiType.OBJECT,
+        properties: {
+          name: {
+            type: GenAiType.STRING,
+            description: "The palette name",
+          },
+          description: {
+            type: GenAiType.STRING,
+            description: "The palette description",
+          },
+          colors: {
+            type: GenAiType.ARRAY,
+            items: {
+              type: GenAiType.OBJECT,
+              properties: {
+                value: {
+                  type: GenAiType.INTEGER,
+                  description: "The color value",
+                },
+                name: {
+                  type: GenAiType.STRING,
+                  description: "The color name",
+                },
+                color: {
+                  type: GenAiType.STRING,
+                  description: "The color in hex format",
+                },
+              },
+              required: ["value", "name", "color"],
             },
           },
-          required: ["value", "name", "color"],
         },
       }
     );

@@ -4,6 +4,7 @@ export interface GeneratedPalette {
   id: string;
   userId?: string | null;
   name?: string | null;
+  description?: string | null;
   colors: PaletteColor[];
   createdAt: Date;
 }

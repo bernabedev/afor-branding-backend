@@ -4,4 +4,8 @@ export interface PaletteColor {
   color: string; // Hex
 }
 
-export type Palette = PaletteColor[];
+export interface Palette {
+  name: string;
+  description: string;
+  colors: PaletteColor[];
+}

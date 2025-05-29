@@ -5,6 +5,7 @@ import type { IGeneratedPaletteRepository } from "../ports/generated-palette.rep
 interface CreateGeneratedPaletteInput {
   userId?: string | null;
   name?: string;
+  description?: string;
   colors: PaletteColor[];
 }
 
@@ -21,6 +22,7 @@ export class CreateGeneratedPaletteUseCase {
     return this.generatedPaletteRepository.create({
       userId: input.userId,
       name: input.name,
+      description: input.description,
       colors: input.colors,
     });
   }

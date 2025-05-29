@@ -42,6 +42,7 @@ export class PrismaGeneratedPaletteRepository
       data: {
         userId: data.userId,
         name: data.name,
+        description: data.description,
         colors: data.colors as unknown as Prisma.JsonArray,
       },
     });

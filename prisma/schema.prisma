@@ -30,13 +30,14 @@ model User {
 }
 
 model GeneratedPalette {
-  id        String            @id @default(uuid())
-  name      String?
-  user      User?             @relation(fields: [userId], references: [id])
-  userId    String?
-  colors    Json
-  favorites FavoritePalette[]
-  createdAt DateTime          @default(now())
+  id          String            @id @default(uuid())
+  name        String?
+  description String?
+  user        User?             @relation(fields: [userId], references: [id])
+  userId      String?
+  colors      Json
+  favorites   FavoritePalette[]
+  createdAt   DateTime          @default(now())
 
   @@index([userId])
   @@map("generated_palettes")
