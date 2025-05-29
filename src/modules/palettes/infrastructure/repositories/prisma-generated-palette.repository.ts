@@ -3,8 +3,8 @@ import type {
   PrismaClient,
   GeneratedPalette as PrismaGeneratedPalette,
 } from "@/generated/prisma";
-import { paginate, PaginatedResult } from "@/helpers/paginate";
 import type { PaletteColor } from "@/modules/chatbot/domain/palette.entity";
+import { paginate, PaginatedResult } from "@helpers/paginate";
 import type { IGeneratedPaletteRepository } from "../../application/ports/generated-palette.repository";
 import type {
   GeneratedPalette,
