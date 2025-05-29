@@ -27,7 +27,7 @@ export const palettesModule = (deps: PalettesModuleDependencies) => {
   );
   const addFavoritePaletteUseCase = new AddFavoritePaletteUseCase(
     favoritePaletteRepository,
-    generatedPaletteRepository // Añadida dependencia
+    generatedPaletteRepository
   );
   const getUserFavoritePalettesUseCase = new GetUserFavoritePalettesUseCase(
     favoritePaletteRepository
