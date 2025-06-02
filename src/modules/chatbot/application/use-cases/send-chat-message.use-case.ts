@@ -64,14 +64,19 @@ export class SendChatMessageUseCase {
       input.messageContent
     );
 
-    let assistantMessageEntity: ChatMessage | undefined;
-    if (assistantResponse && typeof assistantResponse === "string") {
-      assistantMessageEntity = await this.chatMessageRepository.create({
+    const isJsonResponse =
+      assistantResponse &&
+      typeof assistantResponse === "object" &&
+      assistantResponse !== null;
+
+    const assistantMessageEntity: ChatMessage | undefined =
+      await this.chatMessageRepository.create({
         chatId: input.chatId,
         role: MessageRoleDomain.ASSISTANT,
-        content: assistantResponse,
+        content: isJsonResponse
+          ? JSON.stringify(assistantResponse)
+          : assistantResponse ?? "",
       });
-    }
 
     return {
       userMessage: userMessageEntity,
