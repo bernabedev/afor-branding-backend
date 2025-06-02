@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -18,14 +12,20 @@ model User {
   id           String             @id @default(uuid())
   email        String             @unique
   name         String?
-  passwordHash String
-  palettes     GeneratedPalette[]
-  favoritePals FavoritePalette[]
-  chats        Chat[]
+  passwordHash String?
+  provider     AuthProvider       @default(EMAIL)
+  providerId   String?
+  avatar       String?
+  verified     Boolean            @default(false)
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
+  chats        Chat[]
+  favoritePals FavoritePalette[]
+  palettes     GeneratedPalette[]
 
+  @@unique([provider, providerId])
   @@index([email])
+  @@index([provider, providerId])
   @@map("users")
 }
 
@@ -33,11 +33,11 @@ model GeneratedPalette {
   id          String            @id @default(uuid())
   name        String?
   description String?
-  user        User?             @relation(fields: [userId], references: [id])
   userId      String?
   colors      Json
-  favorites   FavoritePalette[]
   createdAt   DateTime          @default(now())
+  favorites   FavoritePalette[]
+  user        User?             @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@map("generated_palettes")
@@ -46,11 +46,11 @@ model GeneratedPalette {
 model FavoritePalette {
   id        String           @id @default(uuid())
   name      String?
-  user      User             @relation(fields: [userId], references: [id])
   userId    String
-  palette   GeneratedPalette @relation(fields: [paletteId], references: [id])
   paletteId String
   createdAt DateTime         @default(now())
+  palette   GeneratedPalette @relation(fields: [paletteId], references: [id])
+  user      User             @relation(fields: [userId], references: [id])
 
   @@unique([userId, paletteId])
   @@index([userId])
@@ -60,13 +60,34 @@ model FavoritePalette {
 
 model Chat {
   id        String        @id @default(uuid())
-  user      User?         @relation(fields: [userId], references: [id])
   userId    String?
-  messages  ChatMessage[]
   createdAt DateTime      @default(now())
+  messages  ChatMessage[]
+  user      User?         @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@map("chats")
+}
+
+model ChatMessage {
+  id        String           @id @default(uuid())
+  chatId    String
+  role      MessageRole
+  content   String
+  reaction  MessageReaction?
+  createdAt DateTime         @default(now())
+  chat      Chat             @relation(fields: [chatId], references: [id])
+
+  @@index([chatId])
+  @@map("chat_messages")
+}
+
+enum AuthProvider {
+  EMAIL  @map("email")
+  GOOGLE @map("google")
+  GITHUB @map("github")
+
+  @@map("auth_provider")
 }
 
 enum MessageRole {
@@ -82,17 +103,4 @@ enum MessageReaction {
   DISLIKE @map("dislike")
 
   @@map("message_reaction")
-}
-
-model ChatMessage {
-  id        String           @id @default(uuid())
-  chat      Chat             @relation(fields: [chatId], references: [id])
-  chatId    String
-  role      MessageRole
-  content   String
-  reaction  MessageReaction?
-  createdAt DateTime         @default(now())
-
-  @@index([chatId])
-  @@map("chat_messages")
 }

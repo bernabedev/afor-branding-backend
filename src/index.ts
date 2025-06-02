@@ -7,6 +7,7 @@ import { Logestic } from "logestic";
 import { PrismaClient } from "./generated/prisma";
 import { ALLOWED_ORIGINS, JWT_SECRET, PORT } from "./helpers/constants";
 import { authModule } from "./modules/auth/auth.module";
+import { oauthModule } from "./modules/auth/oauth.module";
 import { JwtSignerVerifier } from "./modules/auth/domain/jwt-payload.interface";
 import { authPlugin } from "./modules/auth/infrastructure/plugins/auth.plugin";
 import { chatbotModule } from "./modules/chatbot/chatbot.module";
@@ -34,9 +35,10 @@ app
   )
   .use(
     cors({
-      origin: ALLOWED_ORIGINS?.split(",") || [],
+      origin: ALLOWED_ORIGINS?.split(",") || ["http://localhost:3000"],
       credentials: true,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
     })
   )
   .use(
@@ -84,6 +86,12 @@ const authRoutes = authModule({
   jwtInstance: (app.decorator as { jwtAuth: JwtSignerVerifier }).jwtAuth,
 });
 app.use(authRoutes);
+
+const oauthRoutes = oauthModule({
+  prisma,
+  jwtInstance: (app.decorator as { jwtAuth: JwtSignerVerifier }).jwtAuth,
+});
+app.use(oauthRoutes);
 
 const chatbotRoutes = chatbotModule({ prisma });
 app.use(chatbotRoutes);
