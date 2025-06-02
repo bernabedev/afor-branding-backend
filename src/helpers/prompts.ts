@@ -38,19 +38,15 @@ export const PROMPTS = {
       - **When to invoke**: Only when the user specifically asks for typography.
 
     3. **Brand Character**  
-      - **Function**: "describeBrandCharacter"  
       - **When to invoke**: Only when the user requests a definition of the brand’s personality.
 
     4. **Shapes & Rounding**  
-      - **Function**: "suggestShapes"  
       - **When to invoke**: Only when the user asks for shape and corner styling recommendations.
 
     5. **Slogans**  
-      - **Function**: "createSlogan"  
       - **When to invoke**: Only when the user asks for a slogan.
 
     6. **Communication Tone & Personality**  
-      - **Function**: "defineTone"  
       - **When to invoke**: Only when the user requests guidance on tone and communication style.
 
     ### Additional Behaviors
