@@ -6,20 +6,20 @@ import {
   OAUTH_BASE_URL,
 } from "../helpers/constants";
 
-// Almacenamiento temporal para states OAuth (en memoria)
+// Temporary storage for OAuth states (in memory)
 const oauthStates = new Map<string, { timestamp: number; state: string }>();
 
-// Limpiar states expirados cada 5 minutos
+// Clean expired states every 5 minutes
 setInterval(() => {
   const now = Date.now();
   for (const [key, value] of oauthStates.entries()) {
-    if (now - value.timestamp > 10 * 60 * 1000) { // 10 minutos
+    if (now - value.timestamp > 10 * 60 * 1000) { // 10 minutes
       oauthStates.delete(key);
     }
   }
 }, 5 * 60 * 1000);
 
-// Verificar que las credenciales OAuth estén configuradas
+// Verify that OAuth credentials are configured
 const isOAuthConfigured = () => {
   const hasGoogle = GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET;
   const hasGitHub = GITHUB_CLIENT_ID && GITHUB_CLIENT_SECRET;
@@ -31,7 +31,7 @@ const isOAuthConfigured = () => {
   };
 };
 
-// Generar URL de autorización para Google
+// Generate authorization URL for Google
 export const generateGoogleAuthURL = () => {
   if (!GOOGLE_CLIENT_ID) {
     throw new Error("Google OAuth not configured. Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET");
@@ -55,7 +55,7 @@ export const generateGoogleAuthURL = () => {
   return { url, state };
 };
 
-// Generar URL de autorización para GitHub  
+// Generate authorization URL for GitHub  
 export const generateGitHubAuthURL = () => {
   if (!GITHUB_CLIENT_ID) {
     throw new Error("GitHub OAuth not configured. Please set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET");
@@ -77,7 +77,7 @@ export const generateGitHubAuthURL = () => {
   return { url, state };
 };
 
-// Intercambiar código por tokens - Google
+// Exchange code for tokens - Google
 export const exchangeGoogleCode = async (code: string) => {
   if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
     throw new Error("Google OAuth not configured");
@@ -116,7 +116,7 @@ export const exchangeGoogleCode = async (code: string) => {
   }
 };
 
-// Intercambiar código por tokens - GitHub
+// Exchange code for tokens - GitHub
 export const exchangeGitHubCode = async (code: string) => {
   if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
     throw new Error("GitHub OAuth not configured");
@@ -153,7 +153,7 @@ export const exchangeGitHubCode = async (code: string) => {
   }
 };
 
-// Obtener información del usuario de Google usando OpenID Connect userinfo endpoint
+// Get Google user information using OpenID Connect userinfo endpoint
 export const getGoogleUser = async (accessToken: string) => {
   try {
     const response = await fetch(
@@ -183,10 +183,10 @@ export const getGoogleUser = async (accessToken: string) => {
   }
 };
 
-// Obtener información del usuario de GitHub
+// Get GitHub user information
 export const getGitHubUser = async (accessToken: string) => {
   try {
-    // Obtener información básica del usuario
+    // Get basic user information
     const userResponse = await fetch("https://api.github.com/user", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -200,7 +200,7 @@ export const getGitHubUser = async (accessToken: string) => {
     
     const userData = await userResponse.json();
     
-    // Obtener email del usuario (puede ser privado)
+    // Get user email (may be private)
     const emailResponse = await fetch("https://api.github.com/user/emails", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -228,13 +228,13 @@ export const getGitHubUser = async (accessToken: string) => {
   }
 };
 
-// Generar state aleatorio para prevenir CSRF
+// Generate random state to prevent CSRF
 export const generateState = (): string => {
   return Math.random().toString(36).substring(2, 15) + 
          Math.random().toString(36).substring(2, 15);
 };
 
-// Guardar state en memoria
+// Save state in memory
 export const saveOAuthState = (state: string): void => {
   oauthStates.set(state, {
     timestamp: Date.now(),
@@ -243,7 +243,7 @@ export const saveOAuthState = (state: string): void => {
   console.log("💾 OAuth state saved:", state);
 };
 
-// Verificar y consumir state
+// Verify and consume state
 export const verifyOAuthState = (state: string): boolean => {
   const stored = oauthStates.get(state);
   if (!stored) {
@@ -251,20 +251,20 @@ export const verifyOAuthState = (state: string): boolean => {
     return false;
   }
   
-  // Verificar que no haya expirado (10 minutos)
+  // Verify it hasn't expired (10 minutes)
   if (Date.now() - stored.timestamp > 10 * 60 * 1000) {
     console.log("❌ OAuth state expired:", state);
     oauthStates.delete(state);
     return false;
   }
   
-  // Consumir el state (uso único)
+  // Consume the state (single use)
   oauthStates.delete(state);
   console.log("✅ OAuth state verified and consumed:", state);
   return true;
 };
 
-// Verificar configuración OAuth
+// Verify OAuth configuration
 export const getOAuthStatus = () => {
   const config = isOAuthConfigured();
   

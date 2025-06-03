@@ -21,7 +21,7 @@ interface OAuthModuleProps {
 export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
   new Elysia({ prefix: "/auth" })
     
-    // Estado de configuración OAuth
+    // OAuth configuration status
     .get(
       "/oauth/status",
       async () => {
@@ -35,7 +35,7 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
       }
     )
 
-    // Iniciar flujo OAuth con Google
+    // Start OAuth flow with Google
     .get(
       "/google",
       async ({ set }) => {
@@ -62,7 +62,7 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
       }
     )
 
-    // Callback de Google OAuth
+    // Google OAuth callback
     .get(
       "/google/callback",
       async ({ query, set, cookie: { auth } }) => {
@@ -79,10 +79,10 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
             return { error: "Invalid state parameter" };
           }
 
-          // Intercambiar código por tokens
+          // Exchange code for tokens
           const tokens = await exchangeGoogleCode(code);
           
-          // Obtener información del usuario
+          // Get user information
           const googleUser = await getGoogleUser(tokens.accessToken);
           
           if (!googleUser.email) {
@@ -90,7 +90,7 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
             return { error: "No email provided by Google" };
           }
           
-          // Buscar o crear usuario en la base de datos
+          // Find or create user in database
           let user = await prisma.user.findFirst({
             where: {
               OR: [
@@ -104,7 +104,7 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
           });
           
           if (!user) {
-            // Crear nuevo usuario
+            // Create new user
             user = await prisma.user.create({
               data: {
                 email: googleUser.email,
@@ -116,7 +116,7 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
               },
             });
           } else if (user.provider === "EMAIL") {
-            // Actualizar usuario existente para agregar Google
+            // Update existing user to add Google
             user = await prisma.user.update({
               where: { id: user.id },
               data: {
@@ -129,20 +129,20 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
             });
           }
           
-          // Generar JWT
+          // Generate JWT
           const token = await jwtInstance.sign({ 
             sub: user.id,
             email: user.email,
             name: user.name,
           });
           
-          // Establecer cookie de autenticación
+          // Set authentication cookie
           auth.set({
             value: token,
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 60 * 60 * 24 * 7, // 7 días
+            maxAge: 60 * 60 * 24 * 7, // 7 days
           });
           
           return {
@@ -176,7 +176,7 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
       }
     )
 
-    // Iniciar flujo OAuth con GitHub
+    // Start OAuth flow with GitHub
     .get(
       "/github",
       async ({ set }) => {
@@ -203,7 +203,7 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
       }
     )
 
-    // Callback de GitHub OAuth
+    // GitHub OAuth callback
     .get(
       "/github/callback",
       async ({ query, set, cookie: { auth } }) => {
@@ -220,10 +220,10 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
             return { error: "Invalid state parameter" };
           }
 
-          // Intercambiar código por tokens
+          // Exchange code for tokens
           const tokens = await exchangeGitHubCode(code);
           
-          // Obtener información del usuario
+          // Get user information
           const githubUser = await getGitHubUser(tokens.accessToken);
           
           if (!githubUser.email) {
@@ -231,7 +231,7 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
             return { error: "No email provided by GitHub" };
           }
           
-          // Buscar o crear usuario en la base de datos
+          // Find or create user in database
           let user = await prisma.user.findFirst({
             where: {
               OR: [
@@ -245,7 +245,7 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
           });
           
           if (!user) {
-            // Crear nuevo usuario
+            // Create new user
             user = await prisma.user.create({
               data: {
                 email: githubUser.email,
@@ -257,7 +257,7 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
               },
             });
           } else if (user.provider === "EMAIL") {
-            // Actualizar usuario existente para agregar GitHub
+            // Update existing user to add GitHub
             user = await prisma.user.update({
               where: { id: user.id },
               data: {
@@ -270,20 +270,20 @@ export const oauthModule = ({ prisma, jwtInstance }: OAuthModuleProps) =>
             });
           }
           
-          // Generar JWT
+          // Generate JWT
           const token = await jwtInstance.sign({ 
             sub: user.id,
             email: user.email,
             name: user.name,
           });
           
-          // Establecer cookie de autenticación
+          // Set authentication cookie
           auth.set({
             value: token,
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 60 * 60 * 24 * 7, // 7 días
+            maxAge: 60 * 60 * 24 * 7, // 7 days
           });
           
           return {

@@ -1,6 +1,6 @@
 # 🎨 **Afor Branding Backend**
 
-> **Plataforma de branding inteligente con IA que genera paletas de colores, conversaciones contextuales y autenticación OAuth2 avanzada.**
+> **Intelligent AI-powered branding platform that generates color palettes, contextual conversations, and advanced OAuth2 authentication.**
 
 [![Bun](https://img.shields.io/badge/Bun-1.2+-000?style=for-the-badge&logo=bun)](https://bun.sh/)
 [![Elysia](https://img.shields.io/badge/Elysia-Framework-blue?style=for-the-badge)](https://elysiajs.com/)
@@ -8,112 +8,114 @@
 [![Google Gemini](https://img.shields.io/badge/Google_Gemini-AI-4285F4?style=for-the-badge&logo=google)](https://ai.google.dev/)
 [![OAuth2](https://img.shields.io/badge/OAuth2-Google_GitHub-green?style=for-the-badge)](https://oauth.net/2/)
 
----
-
-## 📋 **Descripción General**
-
-**Afor** es una aplicación backend moderna construida con **Bun + Elysia** que combina inteligencia artificial con autenticación OAuth2 para crear una plataforma completa de branding automatizado.
-
-### ✨ **Características Principales**
-
-🔐 **Autenticación OAuth2 Completa**
-
-- Google OAuth 2.0 con OpenID Connect
-- GitHub OAuth con REST API v3
-- JWT tokens seguros con cookies HTTPOnly
-- Verificación CSRF con almacenamiento en memoria
-
-🤖 **Inteligencia Artificial Integrada**
-
-- Chatbot conversacional con Google Gemini AI
-- Generación automática de paletas de colores
-- Interpretación de lenguaje natural para branding
-- Generación de fuentes y elementos visuales
-
-🎨 **Gestión de Paletas Avanzada**
-
-- Creación de paletas basadas en descripciones
-- Sistema de favoritos y historial
-- Exportación en múltiples formatos
-- Gestión completa de usuarios OAuth
-
-📊 **Base de Datos Robusta**
-
-- PostgreSQL con Prisma ORM
-- Usuarios multi-proveedor (EMAIL, GOOGLE, GITHUB)
-- Historial de conversaciones y paletas
-- Migraciones automáticas y schemas tipados
-
-🛡️ **Seguridad y Performance**
-
-- Rate limiting configurable
-- CORS avanzado con múltiples orígenes
-- Middleware de logging estructurado
-- Validación de datos con tipos estrictos
-
-📖 **Documentación Automática**
-
-- Swagger/OpenAPI integrado
-- Endpoints autodocumentados
-- Tipos TypeScript generados
-- Testing endpoints incluidos
+**Languages:** 🇺🇸 **English** | [🇪🇸 Español](README-es.md)
 
 ---
 
-## 🚀 **Tecnologías Utilizadas**
+## 📋 **Overview**
+
+**Afor** is a modern backend application built with **Bun + Elysia** that combines artificial intelligence with OAuth2 authentication to create a complete automated branding platform.
+
+### ✨ **Key Features**
+
+🔐 **Complete OAuth2 Authentication**
+
+- Google OAuth 2.0 with OpenID Connect
+- GitHub OAuth with REST API v3
+- Secure JWT tokens with HTTPOnly cookies
+- CSRF verification with in-memory storage
+
+🤖 **Integrated Artificial Intelligence**
+
+- Conversational chatbot with Google Gemini AI
+- Automatic color palette generation
+- Natural language interpretation for branding
+- Font and visual elements generation
+
+🎨 **Advanced Palette Management**
+
+- Palette creation based on descriptions
+- Favorites and history system
+- Export in multiple formats
+- Complete OAuth user management
+
+📊 **Robust Database**
+
+- PostgreSQL with Prisma ORM
+- Multi-provider users (EMAIL, GOOGLE, GITHUB)
+- Conversation and palette history
+- Automatic migrations and typed schemas
+
+🛡️ **Security and Performance**
+
+- Configurable rate limiting
+- Advanced CORS with multiple origins
+- Structured logging middleware
+- Data validation with strict types
+
+📖 **Automatic Documentation**
+
+- Integrated Swagger/OpenAPI
+- Auto-documented endpoints
+- Generated TypeScript types
+- Testing endpoints included
+
+---
+
+## 🚀 **Technologies Used**
 
 ### **🔧 Backend Core**
 
-- **[Bun](https://bun.sh/)** - Runtime JavaScript ultrarrápido
-- **[Elysia](https://elysiajs.com/)** - Framework web moderno para Bun
-- **[TypeScript](https://typescriptlang.org/)** - Tipado estático
+- **[Bun](https://bun.sh/)** - Ultra-fast JavaScript runtime
+- **[Elysia](https://elysiajs.com/)** - Modern web framework for Bun
+- **[TypeScript](https://typescriptlang.org/)** - Static typing
 
-### **🗄️ Base de Datos**
+### **🗄️ Database**
 
-- **[PostgreSQL](https://postgresql.org/)** - Base de datos relacional
-- **[Prisma](https://prisma.io/)** - ORM moderno y type-safe
+- **[PostgreSQL](https://postgresql.org/)** - Relational database
+- **[Prisma](https://prisma.io/)** - Modern and type-safe ORM
 
-### **🧠 Inteligencia Artificial**
+### **🧠 Artificial Intelligence**
 
-- **[Google Gemini AI](https://ai.google.dev/)** - Generación de contenido
-- **API de Gemini 2.0 Flash** - Modelo de lenguaje avanzado
+- **[Google Gemini AI](https://ai.google.dev/)** - Content generation
+- **Gemini 2.0 Flash API** - Advanced language model
 
-### **🔐 Autenticación**
+### **🔐 Authentication**
 
-- **OAuth 2.0** - Estándar de autenticación
-- **OpenID Connect** - Identidad federada
-- **JWT** - Tokens seguros
+- **OAuth 2.0** - Authentication standard
+- **OpenID Connect** - Federated identity
+- **JWT** - Secure tokens
 
 ### **🐳 DevOps**
 
-- **[Docker](https://docker.com/)** - Containerización
-- **Docker Compose** - Orquestación de servicios
+- **[Docker](https://docker.com/)** - Containerization
+- **Docker Compose** - Service orchestration
 
 ---
 
-## 📚 **Documentación**
+## 📚 **Documentation**
 
 <details>
-<summary><h2>🚀 Configuración Local</h2></summary>
+<summary><h2>🚀 Local Setup</h2></summary>
 
-Esta guía te ayudará a ejecutar el proyecto **Afor** en tu entorno de desarrollo local.
+This guide will help you run the **Afor** project in your local development environment.
 
-### 📋 Prerrequisitos
+### 📋 Prerequisites
 
-Asegúrate de tener instalado:
+Make sure you have installed:
 
-- **[Bun](https://bun.sh/)** (v1.2 o superior) - Runtime JavaScript ultrarrápido
-- **[Node.js](https://nodejs.org/)** (v18 o superior) - Como fallback
-- **[Docker](https://www.docker.com/)** y **Docker Compose** - Para la base de datos
-- **[Git](https://git-scm.com/)** - Control de versiones
+- **[Bun](https://bun.sh/)** (v1.2 or higher) - Ultra-fast JavaScript runtime
+- **[Node.js](https://nodejs.org/)** (v18 or higher) - As fallback
+- **[Docker](https://www.docker.com/)** and **Docker Compose** - For the database
+- **[Git](https://git-scm.com/)** - Version control
 
-#### 🔧 Verificar instalación de Bun
+#### 🔧 Verify Bun installation
 
 ```bash
 bun --version
 ```
 
-Si no tienes Bun instalado:
+If you don't have Bun installed:
 
 ```bash
 # Windows (PowerShell)
@@ -123,55 +125,55 @@ powershell -c "irm bun.sh/install.ps1 | iex"
 curl -fsSL https://bun.sh/install | bash
 ```
 
-### 🗂️ Paso 1: Configurar Variables de Entorno
+### 🗂️ Step 1: Configure Environment Variables
 
-Crea un archivo `.env` en la raíz del proyecto:
+Create a `.env` file in the project root:
 
 ```bash
-# Crear archivo .env
+# Create .env file
 touch .env
 ```
 
-Agrega las siguientes variables:
+Add the following variables:
 
 ```env
-# Puerto del servidor
+# Server port
 PORT=3000
 
-# Base de datos (PostgreSQL)
+# Database (PostgreSQL)
 DATABASE_URL="postgresql://afor_user:afor_password@localhost:5432/afor_db?schema=public"
 
 # Google Gemini AI
-GEMINI_API_KEY="tu_api_key_de_gemini"
+GEMINI_API_KEY="your_gemini_api_key"
 GEMINI_MODEL="gemini-2.0-flash"
 
-# Autenticación
-JWT_SECRET="tu_jwt_secret_super_seguro_aqui"
+# Authentication
+JWT_SECRET="your_super_secure_jwt_secret_here"
 
-# CORS (dominios permitidos)
+# CORS (allowed domains)
 ALLOWED_ORIGINS="http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000"
 
-# OAuth Configuration (opcional - ver pestaña OAuth)
+# OAuth Configuration (optional - see OAuth tab)
 OAUTH_BASE_URL=http://localhost:3000
-GOOGLE_CLIENT_ID=tu_google_client_id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=tu_google_client_secret
-GITHUB_CLIENT_ID=tu_github_client_id
-GITHUB_CLIENT_SECRET=tu_github_client_secret
+GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
 ```
 
-#### 🔑 Obtener API Key de Google Gemini
+#### 🔑 Get Google Gemini API Key
 
-1. Ve a [Google AI Studio](https://aistudio.google.com/)
-2. Inicia sesión con tu cuenta de Google
-3. Crea un nuevo proyecto o usa uno existente
-4. Ve a **API Keys** y genera una nueva clave
-5. Copia la clave y pégala en `GEMINI_API_KEY`
+1. Go to [Google AI Studio](https://aistudio.google.com/)
+2. Sign in with your Google account
+3. Create a new project or use an existing one
+4. Go to **API Keys** and generate a new key
+5. Copy the key and paste it into `GEMINI_API_KEY`
 
-### 🗄️ Paso 2: Configurar Base de Datos PostgreSQL
+### 🗄️ Step 2: Configure PostgreSQL Database
 
-#### Opción A: Con Docker (Recomendado)
+#### Option A: With Docker (Recommended)
 
-Crea un archivo `docker-compose.dev.yml` para desarrollo:
+Create a `docker-compose.dev.yml` file for development:
 
 ```yaml
 version: "3.8"
@@ -207,18 +209,18 @@ volumes:
   postgres_data:
 ```
 
-Ejecutar la base de datos:
+Run the database:
 
 ```bash
 docker-compose -f docker-compose.dev.yml up -d
 ```
 
-#### Opción B: PostgreSQL Local
+#### Option B: Local PostgreSQL
 
-Si prefieres instalar PostgreSQL directamente:
+If you prefer to install PostgreSQL directly:
 
-1. Instala PostgreSQL desde [postgresql.org](https://www.postgresql.org/download/)
-2. Crea la base de datos:
+1. Install PostgreSQL from [postgresql.org](https://www.postgresql.org/download/)
+2. Create the database:
 
 ```sql
 CREATE DATABASE afor_db;
@@ -226,266 +228,266 @@ CREATE USER afor_user WITH PASSWORD 'afor_password';
 GRANT ALL PRIVILEGES ON DATABASE afor_db TO afor_user;
 ```
 
-### 📦 Paso 3: Instalar Dependencias
+### 📦 Step 3: Install Dependencies
 
 ```bash
 bun install
 ```
 
-### 🔄 Paso 4: Configurar Prisma y Base de Datos
+### 🔄 Step 4: Configure Prisma and Database
 
-#### Generar cliente de Prisma
+#### Generate Prisma client
 
 ```bash
 bun run postinstall
-# o directamente:
+# or directly:
 npx prisma generate
 ```
 
-#### Ejecutar migraciones
+#### Run migrations
 
 ```bash
 npx prisma migrate dev --name init
 ```
 
-#### (Opcional) Visualizar la base de datos
+#### (Optional) Visualize the database
 
 ```bash
 npx prisma studio
 ```
 
-Esto abrirá una interfaz web en `http://localhost:5555` para ver y editar datos.
+This will open a web interface at `http://localhost:5555` to view and edit data.
 
-### 🚀 Paso 5: Ejecutar el Proyecto
+### 🚀 Step 5: Run the Project
 
-#### Modo Desarrollo (con hot reload)
+#### Development mode (with hot reload)
 
 ```bash
 bun run dev
 ```
 
-#### Modo Producción
+#### Production mode
 
 ```bash
 bun run start
 ```
 
-### ✅ Verificar que Todo Funciona
+### ✅ Verify Everything Works
 
-Una vez ejecutado, deberías ver:
+Once running, you should see:
 
 ```
 🔌 Connected to the database
 🦊 Elysia is running at http://localhost:3000
 ```
 
-#### Probar endpoints:
+#### Test endpoints:
 
 1. **Health Check**: `GET http://localhost:3000/health`
-2. **Documentación**: `GET http://localhost:3000/docs`
+2. **Documentation**: `GET http://localhost:3000/docs`
 3. **API Root**: `GET http://localhost:3000/`
 
-#### Ejemplo con curl:
+#### Example with curl:
 
 ```bash
 # Health check
 curl http://localhost:3000/health
 
-# Generar paleta (endpoint público)
+# Generate palette (public endpoint)
 curl -X POST http://localhost:3000/generate-palette \
   -H "Content-Type: application/json" \
-  -d '{"value": "una empresa de tecnología moderna y minimalista"}'
+  -d '{"value": "a modern and minimalist technology company"}'
 ```
 
-### 🔧 Scripts Disponibles
+### 🔧 Available Scripts
 
 ```bash
-# Desarrollo con hot reload
+# Development with hot reload
 bun run dev
 
-# Producción
+# Production
 bun run start
 
-# Generar cliente Prisma
+# Generate Prisma client
 bun run postinstall
 
-# Resetear base de datos
+# Reset database
 npx prisma migrate reset
 
-# Ver logs de Docker
+# View Docker logs
 docker-compose -f docker-compose.dev.yml logs -f
 ```
 
-### 🛠️ Solución de Problemas
+### 🛠️ Troubleshooting
 
 #### Error: "Cannot connect to database"
 
-1. Verifica que PostgreSQL esté ejecutándose:
+1. Verify PostgreSQL is running:
 
    ```bash
    docker-compose -f docker-compose.dev.yml ps
    ```
 
-2. Verifica la `DATABASE_URL` en `.env`
+2. Check the `DATABASE_URL` in `.env`
 
-3. Ejecuta las migraciones:
+3. Run migrations:
    ```bash
    npx prisma migrate dev
    ```
 
 #### Error: "Invalid Gemini API Key"
 
-1. Verifica que tu API key sea válida
-2. Asegúrate de tener créditos en Google AI Studio
-3. Revisa que `GEMINI_MODEL` sea correcto
+1. Verify your API key is valid
+2. Make sure you have credits in Google AI Studio
+3. Check that `GEMINI_MODEL` is correct
 
-#### Puerto 3000 ocupado
+#### Port 3000 busy
 
-Cambia el puerto en `.env`:
+Change the port in `.env`:
 
 ```env
 PORT=3001
 ```
 
-### 📊 Monitoreo y Desarrollo
+### 📊 Monitoring and Development
 
-#### Ver base de datos
+#### View database
 
-- **Prisma Studio**: `npx prisma studio` (puerto 5555)
-- **Adminer**: `http://localhost:8080` (si usas Docker)
+- **Prisma Studio**: `npx prisma studio` (port 5555)
+- **Adminer**: `http://localhost:8080` (if using Docker)
 
-#### Logs de la aplicación
+#### Application logs
 
-Los logs aparecerán en la consola con formato estructurado gracias a **Logestic**.
+Logs will appear in the console with structured format thanks to **Logestic**.
 
 </details>
 
 <details>
-<summary><h2>🔐 Configuración OAuth</h2></summary>
+<summary><h2>🔐 OAuth Configuration</h2></summary>
 
-**Estado:** ✅ Implementación completa
+**Status:** ✅ Complete implementation
 
-### 📋 **Resumen**
+### 📋 **Summary**
 
-Configuración OAuth para autenticación con Google y GitHub en **afor-branding-backend**.
+OAuth configuration for authentication with Google and GitHub in **afor-branding-backend**.
 
-#### ✅ **Proveedores soportados:**
+#### ✅ **Supported providers:**
 
 - 🔵 **Google OAuth 2.0** (OpenID Connect)
 - ⚫ **GitHub OAuth**
 
-### 🔵 **1. Configuración Google OAuth**
+### 🔵 **1. Google OAuth Configuration**
 
-#### **Paso 1: Google Cloud Console**
+#### **Step 1: Google Cloud Console**
 
-1. Ve a [Google Cloud Console](https://console.cloud.google.com/)
-2. Selecciona tu proyecto o crea uno nuevo
-3. Habilita **Google Identity Services**
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Select your project or create a new one
+3. Enable **Google Identity Services**
 
-#### **Paso 2: Crear credenciales OAuth 2.0**
+#### **Step 2: Create OAuth 2.0 credentials**
 
-1. Ve a **APIs & Services > Credentials**
-2. Clic en **"+ CREATE CREDENTIALS" > "OAuth client ID"**
-3. Selecciona **"Web application"**
-4. Configura:
+1. Go to **APIs & Services > Credentials**
+2. Click **"+ CREATE CREDENTIALS" > "OAuth client ID"**
+3. Select **"Web application"**
+4. Configure:
    ```
-   Nombre: Afor App - OAuth
+   Name: Afor App - OAuth
    JavaScript origins: http://localhost:3000
    Redirect URIs: http://localhost:3000/auth/google/callback
    ```
 
-#### **Paso 3: OAuth consent screen**
+#### **Step 3: OAuth consent screen**
 
-1. Ve a **OAuth consent screen**
-2. Configura:
+1. Go to **OAuth consent screen**
+2. Configure:
    ```
    App name: Afor Branding Platform
-   User support email: tu-email@dominio.com
+   User support email: your-email@domain.com
    ```
 3. **Scopes:**
    - `../auth/userinfo.email`
    - `../auth/userinfo.profile`
    - `openid`
 
-### ⚫ **2. Configuración GitHub OAuth**
+### ⚫ **2. GitHub OAuth Configuration**
 
-#### **Crear OAuth App**
+#### **Create OAuth App**
 
-1. Ve a [GitHub Developer Settings](https://github.com/settings/developers)
-2. Clic **"New OAuth App"**
-3. Configura:
+1. Go to [GitHub Developer Settings](https://github.com/settings/developers)
+2. Click **"New OAuth App"**
+3. Configure:
    ```
    Application name: Afor Branding Platform
    Homepage URL: http://localhost:3000
    Authorization callback URL: http://localhost:3000/auth/github/callback
    ```
 
-### 🔧 **3. Variables de Entorno**
+### 🔧 **3. Environment Variables**
 
-Actualiza tu archivo `.env`:
+Update your `.env` file:
 
 ```bash
 # OAuth Configuration
 OAUTH_BASE_URL=http://localhost:3000
 
 # Google OAuth
-GOOGLE_CLIENT_ID=tu_google_client_id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=tu_google_client_secret
+GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 # GitHub OAuth
-GITHUB_CLIENT_ID=tu_github_client_id
-GITHUB_CLIENT_SECRET=tu_github_client_secret
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
 
 # Existing variables...
 PORT=3000
 DATABASE_URL="postgresql://..."
-JWT_SECRET=tu_jwt_secret_muy_seguro
+JWT_SECRET=your_very_secure_jwt_secret
 ALLOWED_ORIGINS=http://localhost:3000
 ```
 
 ### 🚀 **4. API Endpoints**
 
 ```bash
-GET /auth/oauth/status          # Estado de configuración
-GET /auth/google               # Iniciar Google OAuth
-GET /auth/google/callback      # Callback Google
-GET /auth/github               # Iniciar GitHub OAuth
-GET /auth/github/callback      # Callback GitHub
+GET /auth/oauth/status          # Configuration status
+GET /auth/google               # Start Google OAuth
+GET /auth/google/callback      # Google callback
+GET /auth/github               # Start GitHub OAuth
+GET /auth/github/callback      # GitHub callback
 ```
 
-### 🧪 **5. Pruebas**
+### 🧪 **5. Testing**
 
 ```bash
-# Estado del servidor
+# Server status
 curl http://localhost:3000/health
 
-# Estado OAuth
+# OAuth status
 curl http://localhost:3000/auth/oauth/status
 
-# Flujos OAuth (en navegador)
+# OAuth flows (in browser)
 http://localhost:3000/auth/google
 http://localhost:3000/auth/github
 ```
 
-### 🔧 **6. Configuración de Producción**
+### 🔧 **6. Production Configuration**
 
-#### **Variables de entorno:**
+#### **Environment variables:**
 
 ```bash
-OAUTH_BASE_URL=https://tu-dominio.com
+OAUTH_BASE_URL=https://your-domain.com
 GOOGLE_CLIENT_ID=prod_google_client_id
 GOOGLE_CLIENT_SECRET=prod_google_client_secret
 GITHUB_CLIENT_ID=prod_github_client_id
 GITHUB_CLIENT_SECRET=prod_github_client_secret
-ALLOWED_ORIGINS=https://tu-dominio.com
+ALLOWED_ORIGINS=https://your-domain.com
 ```
 
 #### **Redirect URIs:**
 
-- Google: `https://tu-dominio.com/auth/google/callback`
-- GitHub: `https://tu-dominio.com/auth/github/callback`
+- Google: `https://your-domain.com/auth/google/callback`
+- GitHub: `https://your-domain.com/auth/github/callback`
 
-### 📚 **Referencias**
+### 📚 **References**
 
 - [Google Identity - OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect)
 - [GitHub OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps)
@@ -494,19 +496,19 @@ ALLOWED_ORIGINS=https://tu-dominio.com
 
 ---
 
-## 🏗️ **Arquitectura del Sistema**
+## 🏗️ **System Architecture**
 
 ```mermaid
 flowchart TD
-    subgraph "🌐 Cliente"
-        User[👤 Usuario] --> UI[🖥️ Frontend]
+    subgraph "🌐 Client"
+        User[👤 User] --> UI[🖥️ Frontend]
     end
 
     subgraph "⚡ Backend API"
         Router[🚦 Router] --> MW[🔧 Middlewares]
         MW --> Auth[🔐 OAuth2 + JWT]
-        MW --> Bot[🤖 Chatbot IA]
-        MW --> Palettes[🎨 Paletas]
+        MW --> Bot[🤖 AI Chatbot]
+        MW --> Palettes[🎨 Palettes]
     end
 
     subgraph "🔐 OAuth"
@@ -514,11 +516,11 @@ flowchart TD
         GitHub[⚫ GitHub]
     end
 
-    subgraph "🧠 IA"
+    subgraph "🧠 AI"
         Gemini[🤖 Gemini AI]
     end
 
-    subgraph "🗄️ Datos"
+    subgraph "🗄️ Data"
         DB[(🗃️ PostgreSQL)]
     end
 
@@ -536,97 +538,97 @@ flowchart TD
 
 ## 🛣️ **API Endpoints**
 
-### **🔐 Autenticación**
+### **🔐 Authentication**
 
-| Método | Endpoint                | Descripción                |
+| Method | Endpoint                | Description                |
 | ------ | ----------------------- | -------------------------- |
-| `POST` | `/auth/login`           | Login con email/password   |
-| `POST` | `/auth/register`        | Registro de usuario        |
-| `GET`  | `/auth/google`          | Iniciar OAuth Google       |
-| `GET`  | `/auth/google/callback` | Callback OAuth Google      |
-| `GET`  | `/auth/github`          | Iniciar OAuth GitHub       |
-| `GET`  | `/auth/github/callback` | Callback OAuth GitHub      |
-| `GET`  | `/auth/oauth/status`    | Estado configuración OAuth |
+| `POST` | `/auth/login`           | Login with email/password  |
+| `POST` | `/auth/register`        | User registration          |
+| `GET`  | `/auth/google`          | Start Google OAuth         |
+| `GET`  | `/auth/google/callback` | Google OAuth callback      |
+| `GET`  | `/auth/github`          | Start GitHub OAuth         |
+| `GET`  | `/auth/github/callback` | GitHub OAuth callback      |
+| `GET`  | `/auth/oauth/status`    | OAuth configuration status |
 
-### **🤖 Chatbot IA**
+### **🤖 AI Chatbot**
 
-| Método | Endpoint           | Descripción               |
-| ------ | ------------------ | ------------------------- |
-| `POST` | `/bot/:id`         | Enviar mensaje al chatbot |
-| `GET`  | `/bot/:id/history` | Historial de conversación |
+| Method | Endpoint           | Description             |
+| ------ | ------------------ | ----------------------- |
+| `POST` | `/bot/:id`         | Send message to chatbot |
+| `GET`  | `/bot/:id/history` | Conversation history    |
 
-### **🎨 Paletas de Colores**
+### **🎨 Color Palettes**
 
-| Método   | Endpoint            | Descripción                |
-| -------- | ------------------- | -------------------------- |
-| `POST`   | `/generate-palette` | Generar paleta con IA      |
-| `GET`    | `/palettes`         | Listar paletas del usuario |
-| `POST`   | `/palettes`         | Crear paleta personalizada |
-| `PUT`    | `/palettes/:id`     | Actualizar paleta          |
-| `DELETE` | `/palettes/:id`     | Eliminar paleta            |
+| Method   | Endpoint            | Description              |
+| -------- | ------------------- | ------------------------ |
+| `POST`   | `/generate-palette` | Generate palette with AI |
+| `GET`    | `/palettes`         | List user palettes       |
+| `POST`   | `/palettes`         | Create custom palette    |
+| `PUT`    | `/palettes/:id`     | Update palette           |
+| `DELETE` | `/palettes/:id`     | Delete palette           |
 
-### **📊 Sistema**
+### **📊 System**
 
-| Método | Endpoint  | Descripción           |
+| Method | Endpoint  | Description           |
 | ------ | --------- | --------------------- |
-| `GET`  | `/health` | Estado del servidor   |
-| `GET`  | `/docs`   | Documentación Swagger |
+| `GET`  | `/health` | Server status         |
+| `GET`  | `/docs`   | Swagger documentation |
 
 ---
 
-## 🚀 **Inicio Rápido**
+## 🚀 **Quick Start**
 
 ```bash
-# 1. Clonar repositorio
-git clone https://github.com/tu-usuario/afor-branding-backend.git
+# 1. Clone repository
+git clone https://github.com/your-user/afor-branding-backend.git
 cd afor-branding-backend
 
-# 2. Instalar dependencias
+# 2. Install dependencies
 bun install
 
-# 3. Configurar variables de entorno
-cp .env.example .env
-# Editar .env con tus credenciales
+# 3. Configure environment variables
+cp env.example .env
+# Edit .env with your credentials
 
-# 4. Levantar base de datos
+# 4. Start database
 docker-compose -f docker-compose.dev.yml up -d
 
-# 5. Ejecutar migraciones
+# 5. Run migrations
 npx prisma migrate dev
 
-# 6. Iniciar servidor
+# 6. Start server
 bun run dev
 ```
 
-🎉 **¡Listo!** Tu API estará disponible en `http://localhost:3000`
+🎉 **Ready!** Your API will be available at `http://localhost:3000`
 
 ---
 
-## 📞 **Soporte y Contribución**
+## 📞 **Support and Contribution**
 
-### 🐛 **Reportar Issues**
+### 🐛 **Report Issues**
 
-Si encuentras algún problema, por favor [crea un issue](https://github.com/tu-usuario/afor-branding-backend/issues).
+If you find any problems, please [create an issue](https://github.com/your-user/afor-branding-backend/issues).
 
-### 🤝 **Contribuir**
+### 🤝 **Contributing**
 
-1. Fork el repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-caracteristica`)
-3. Commit tus cambios (`git commit -am 'Agregar nueva característica'`)
-4. Push a la rama (`git push origin feature/nueva-caracteristica`)
-5. Crea un Pull Request
+1. Fork the repository
+2. Create a branch for your feature (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -am 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Create a Pull Request
 
 ---
 
-## 📄 **Licencia**
+## 📄 **License**
 
-Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detalles.
+This project is under the MIT License. See [LICENSE](LICENSE) for more details.
 
 ---
 
 <div align="center">
 
-**Desarrollado con ❤️ usando Bun + Elysia + IA**
+**Developed with ❤️ using Bun + Elysia + AI**
 
 [![Bun](https://img.shields.io/badge/Built_with-Bun-000?style=flat-square&logo=bun)](https://bun.sh/)
 [![Elysia](https://img.shields.io/badge/Powered_by-Elysia-blue?style=flat-square)](https://elysiajs.com/)
