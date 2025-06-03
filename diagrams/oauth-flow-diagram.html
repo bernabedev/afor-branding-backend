@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama OAuth - Implementación Final</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .diagram-container {
+            padding: 40px;
+            background: #f8f9fa;
+            min-height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mermaid {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .features {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .feature-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card ul {
+            list-style: none;
+        }
+
+        .feature-card li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .feature-card li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .endpoints {
+            background: #2c3e50;
+            color: white;
+            padding: 40px;
+        }
+
+        .endpoints h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .endpoint-list {
+            background: #34495e;
+            border-radius: 10px;
+            padding: 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 2;
+        }
+
+        .endpoint {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .method {
+            color: #3498db;
+            font-weight: bold;
+            min-width: 60px;
+        }
+
+        .path {
+            color: #e74c3c;
+            margin-right: 20px;
+            min-width: 280px;
+        }
+
+        .description {
+            color: #95a5a6;
+        }
+
+        .footer {
+            background: #1a252f;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 1.1rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tech-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .endpoint {
+                flex-direction: column;
+            }
+            
+            .path {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Sistema OAuth - Implementación Final</h1>
+            <p>Autenticación con Google y GitHub usando almacenamiento en memoria</p>
+            <div class="tech-stack">
+                <span class="tech-item">🔵 Google OAuth 2.0</span>
+                <span class="tech-item">⚫ GitHub OAuth</span>
+                <span class="tech-item">🧠 Memory Storage</span>
+                <span class="tech-item">🛡️ JWT Authentication</span>
+            </div>
+            <div class="status-badge">✅ Implementación Completa</div>
+        </div>
+
+        <div class="diagram-container">
+            <div class="mermaid">
+graph TD
+    A[Cliente Frontend] --> B{Elegir Proveedor OAuth}
+    
+    B -->|Google| C[GET /auth/google]
+    B -->|GitHub| D[GET /auth/github]
+    
+    %% Flujo Google OAuth
+    C --> E[generateGoogleAuthURL]
+    E --> F[Generar state aleatorio]
+    F --> G[saveOAuthState en memoria]
+    G --> H[Redirección a Google]
+    
+    H --> I[Usuario autoriza en Google]
+    I --> J[GET /auth/google/callback?code=xxx&state=yyy]
+    
+    %% Flujo GitHub OAuth
+    D --> K[generateGitHubAuthURL]
+    K --> L[Generar state aleatorio]
+    L --> M[saveOAuthState en memoria]
+    M --> N[Redirección a GitHub]
+    
+    N --> O[Usuario autoriza en GitHub]
+    O --> P[GET /auth/github/callback?code=xxx&state=yyy]
+    
+    %% Procesamiento Callback Google
+    J --> Q[verifyOAuthState desde memoria]
+    Q -->|✅ Válido| R[exchangeGoogleCode]
+    Q -->|❌ Inválido| S[Error: Invalid state]
+    
+    R --> T[getGoogleUser con accessToken]
+    T --> U{Usuario existe en DB?}
+    
+    %% Procesamiento Callback GitHub
+    P --> V[verifyOAuthState desde memoria]
+    V -->|✅ Válido| W[exchangeGitHubCode]
+    V -->|❌ Inválido| X[Error: Invalid state]
+    
+    W --> Y[getGitHubUser con accessToken]
+    Y --> Z{Usuario existe en DB?}
+    
+    %% Lógica de Usuario Google
+    U -->|No existe| AA[Crear nuevo usuario Google]
+    U -->|Existe EMAIL| BB[Actualizar a proveedor Google]
+    U -->|Existe GOOGLE| CC[Usuario existente]
+    
+    AA --> DD[Generar JWT]
+    BB --> DD
+    CC --> DD
+    
+    %% Lógica de Usuario GitHub
+    Z -->|No existe| EE[Crear nuevo usuario GitHub]
+    Z -->|Existe EMAIL| FF[Actualizar a proveedor GitHub]
+    Z -->|Existe GITHUB| GG[Usuario existente]
+    
+    EE --> HH[Generar JWT]
+    FF --> HH
+    GG --> HH
+    
+    %% Finalización
+    DD --> II[Establecer cookie auth httpOnly]
+    HH --> II
+    
+    II --> JJ[Respuesta exitosa con datos usuario]
+    JJ --> A
+    
+    %% Endpoints adicionales
+    KK[GET /auth/oauth/status] --> LL[Verificar configuración OAuth]
+    
+    %% Estilos
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef error fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef memory fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef database fill:#f9fbe7,stroke:#558b2f,stroke-width:2px
+    
+    class A,JJ startEnd
+    class C,D,E,K,R,T,W,Y,DD,HH,II process
+    class B,U,Z decision
+    class S,X error
+    class F,G,L,M,Q,V memory
+    class AA,BB,CC,EE,FF,GG database
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3>🔐 Seguridad OAuth</h3>
+                <ul>
+                    <li><strong>State verification</strong>: Protección CSRF con tokens aleatorios</li>
+                    <li><strong>Almacenamiento en memoria</strong>: No dependencia de cookies para state</li>
+                    <li><strong>Verificación de parámetros</strong>: Validación estricta de code y state</li>
+                    <li><strong>Tokens seguros</strong>: HTTPOnly cookies para JWT</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🔄 Proveedores Soportados</h3>
+                <ul>
+                    <li><strong>Google OAuth 2.0</strong>: Completo con scopes de perfil y email</li>
+                    <li><strong>GitHub OAuth</strong>: Acceso a información pública de usuario</li>
+                    <li><strong>Extensible</strong>: Arquitectura preparada para más proveedores</li>
+                    <li><strong>Configuración dinámica</strong>: Estado verificable por endpoint</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>👤 Gestión de Usuarios</h3>
+                <ul>
+                    <li><strong>Creación automática</strong>: Usuarios nuevos se crean automáticamente</li>
+                    <li><strong>Vinculación de cuentas</strong>: Usuarios EMAIL pueden migrar a OAuth</li>
+                    <li><strong>Datos completos</strong>: Nombre, email, avatar y verificación</li>
+                    <li><strong>Provider tracking</strong>: Seguimiento del proveedor de autenticación</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🛡️ Autenticación JWT</h3>
+                <ul>
+                    <li><strong>Tokens seguros</strong>: Firmados con algoritmo HS256</li>
+                    <li><strong>Payload estándar</strong>: sub, email, name</li>
+                    <li><strong>Cookies HTTPOnly</strong>: Protección contra XSS</li>
+                    <li><strong>Expiración</strong>: 7 días de duración configurable</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="endpoints">
+            <h2>🚀 API Endpoints Implementados</h2>
+            <div class="endpoint-list">
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="path">/auth/oauth/status</span>
+                    <span class="description">→ Estado de configuración OAuth</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="path">/auth/google</span>
+                    <span class="description">→ Iniciar flujo OAuth con Google</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="path">/auth/google/callback</span>
+                    <span class="description">→ Callback de Google OAuth</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="path">/auth/github</span>
+                    <span class="description">→ Iniciar flujo OAuth con GitHub</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="path">/auth/github/callback</span>
+                    <span class="description">→ Callback de GitHub OAuth</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🎉 <strong>Sistema OAuth Completo</strong> - Implementación robusta y segura</p>
+            <p>Desarrollado con Bun + Elysia + Prisma + JWT</p>
+            <p style="margin-top: 15px; font-size: 0.9rem; opacity: 0.8;">
+                ✨ Código limpio, sin debugging, listo para producción
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Configurar Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#667eea',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#4c63d2',
+                lineColor: '#666',
+                secondaryColor: '#f3e5f5',
+                tertiaryColor: '#e8f5e8'
+            },
+            flowchart: {
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 15
+            }
+        });
+
+        // Efecto de carga
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.querySelector('.container').style.opacity = '1';
+                document.querySelector('.container').style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // Estilo inicial para animación
+        document.querySelector('.container').style.opacity = '0';
+        document.querySelector('.container').style.transform = 'translateY(20px)';
+        document.querySelector('.container').style.transition = 'all 0.6s ease';
+    </script>
+</body>
+</html> 

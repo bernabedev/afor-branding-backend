@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama de Arquitectura - Afor App</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .diagram-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #e9ecef;
+            overflow-x: auto;
+            min-height: 800px;
+        }
+        
+        .diagram-container h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.2rem;
+        }
+        
+        .mermaid {
+            width: 100%;
+            min-width: 1200px;
+            min-height: 700px;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Asegurar que el SVG se vea bien */
+        .mermaid svg {
+            width: 100% !important;
+            height: auto !important;
+            max-width: none !important;
+        }
+        
+        .info-section {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .info-section h2 {
+            margin-top: 0;
+            color: white;
+            font-size: 1.8rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            font-size: 1.3rem;
+        }
+        
+        .feature-card p {
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        
+        .tech-item {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 0.95em;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        /* Responsive design mejorado */
+        @media (max-width: 1400px) {
+            .mermaid {
+                min-width: 1000px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .container {
+                margin: 0 10px;
+            }
+            
+            .mermaid {
+                min-width: 800px;
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .diagram-container {
+                padding: 15px;
+                overflow-x: scroll;
+            }
+            
+            .mermaid {
+                min-width: 600px;
+                padding: 15px;
+            }
+            
+            .tech-stack {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Afor App - Arquitectura del Sistema</h1>
+            <p>Plataforma de Branding Inteligente con IA y OAuth2</p>
+        </div>
+        
+        <div class="content">
+            <div class="info-section">
+                <h2>📋 Resumen del Sistema</h2>
+                <p>Afor es una aplicación backend construida con tecnologías modernas que combina inteligencia artificial con autenticación OAuth2 para crear una plataforma completa de branding automatizado.</p>
+                
+                <div class="tech-stack">
+                    <span class="tech-item">🚀 Elysia + Bun</span>
+                    <span class="tech-item">🧠 Google Gemini AI</span>
+                    <span class="tech-item">🗄️ PostgreSQL + Prisma</span>
+                    <span class="tech-item">🔐 OAuth2 + JWT</span>
+                    <span class="tech-item">🔵 Google OAuth</span>
+                    <span class="tech-item">⚫ GitHub OAuth</span>
+                    <span class="tech-item">📖 Swagger/OpenAPI</span>
+                    <span class="tech-item">🐳 Docker</span>
+                </div>
+            </div>
+            
+            <div class="diagram-container">
+                <h2>🏗️ Diagrama de Arquitectura</h2>
+                <div class="mermaid">
+flowchart TD
+    %% Capa 1: Cliente
+    subgraph "🌐 Cliente Frontend"
+        User[👤 Usuario]
+        UI[🖥️ Interfaz de Usuario]
+    end
+
+    %% Capa 2: API Gateway
+    subgraph "⚡ API Gateway"
+        Router[🚦 Router Principal]
+    end
+
+    %% Capa 3: Middlewares
+    subgraph "🔧 Middlewares"
+        MW[🔄 CORS → Rate Limit → Auth → Logging]
+    end
+
+    %% Capa 4: Módulos de Negocio
+    subgraph "📦 Módulos de Aplicación"
+        AuthModule[🔐 Autenticación<br/>OAuth2 + JWT]
+        ChatbotModule[🤖 Chatbot IA]
+        PalettesModule[🎨 Paletas de Color]
+        DocsModule[📚 Documentación]
+    end
+
+    %% Capa 5: Servicios Externos - Separados para mejor legibilidad
+    subgraph "🔐 OAuth Providers"
+        Google[🔵 Google OAuth 2.0]
+        GitHub[⚫ GitHub OAuth]
+    end
+
+    subgraph "🧠 Servicios IA & Storage"
+        Gemini[🤖 Google Gemini AI]
+        StateStore[🧠 Memory Storage]
+    end
+
+    %% Capa 6: Base de Datos
+    subgraph "🗄️ Persistencia"
+        Prisma[📊 Prisma ORM]
+        PostgreSQL[(🗃️ PostgreSQL)]
+    end
+
+    %% Capa 7: API Endpoints
+    subgraph "🚀 API REST"
+        AuthAPI[🔐 /auth/* - Login, OAuth, Register]
+        BotAPI[🤖 /bot/* - Conversaciones IA]
+        PaletteAPI[🎨 /palettes/* - Gestión de colores]
+        HealthAPI[❤️ /health - Estado del sistema]
+    end
+
+    %% Capa 8: Infraestructura
+    subgraph "🐳 Deploy"
+        Docker[📦 Docker]
+        Swagger[📖 OpenAPI Docs]
+    end
+
+    %% Flujo Principal (Completamente Vertical)
+    User --> UI
+    UI --> Router
+    Router --> MW
+    
+    %% Distribución desde Middlewares (más ordenada)
+    MW --> AuthModule
+    MW --> ChatbotModule  
+    MW --> PalettesModule
+    MW --> DocsModule
+
+    %% Conexiones OAuth (simplificadas)
+    AuthModule --> Google
+    AuthModule --> GitHub
+    AuthModule --> StateStore
+
+    %% Servicios IA (directos)
+    ChatbotModule --> Gemini
+    PalettesModule --> Gemini
+
+    %% Base de Datos (vertical)
+    AuthModule --> Prisma
+    ChatbotModule --> Prisma
+    PalettesModule --> Prisma
+    Prisma --> PostgreSQL
+
+    %% APIs (directas)
+    AuthModule --> AuthAPI
+    ChatbotModule --> BotAPI
+    PalettesModule --> PaletteAPI
+    Router --> HealthAPI
+    DocsModule --> Swagger
+
+    %% Estilos
+    classDef frontend fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef gateway fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef middleware fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef modules fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef external fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef database fill:#f1f8e9,stroke:#689f38,stroke-width:2px
+    classDef api fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    classDef infra fill:#f9fbe7,stroke:#827717,stroke-width:2px
+
+    class User,UI frontend
+    class Router gateway
+    class MW middleware
+    class AuthModule,ChatbotModule,PalettesModule,DocsModule modules
+    class Google,GitHub,Gemini,StateStore external
+    class Prisma,PostgreSQL database
+    class AuthAPI,BotAPI,PaletteAPI,HealthAPI api
+    class Docker,Swagger infra
+                </div>
+            </div>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <h3>🔐 Autenticación OAuth2</h3>
+                    <p>Sistema completo con Google y GitHub OAuth, JWT tokens seguros y almacenamiento en memoria para verificación CSRF.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🔵 Google OAuth 2.0</h3>
+                    <p>Integración completa con OpenID Connect, scopes de perfil y email, y gestión automática de usuarios.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>⚫ GitHub OAuth</h3>
+                    <p>Autenticación con GitHub usando REST API v3, acceso a información pública de usuario y vinculación de cuentas.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🤖 Chatbot Inteligente</h3>
+                    <p>Conversaciones contextuales con IA que puede generar paletas y fuentes automáticamente.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🎨 Generación de Paletas</h3>
+                    <p>IA que interpreta descripciones en lenguaje natural para crear paletas de colores únicas.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>📊 Base de Datos Robusta</h3>
+                    <p>Gestión completa de usuarios OAuth, paletas, favoritos y historial de conversaciones con proveedores múltiples.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🧠 Memory Storage</h3>
+                    <p>Almacenamiento en memoria para verificación de state OAuth2, sin dependencia de cookies para seguridad CSRF.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>📖 Documentación Automática</h3>
+                    <p>API autodocumentada con Swagger/OpenAPI incluyendo todos los endpoints OAuth2 para fácil integración.</p>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h2>🚀 Flujo OAuth2 Principal</h2>
+                <ol style="font-size: 1.1em; line-height: 1.8;">
+                    <li><strong>Usuario</strong> inicia flujo OAuth desde frontend</li>
+                    <li><strong>Backend</strong> genera state aleatorio y lo almacena en memoria</li>
+                    <li><strong>Redirección</strong> a Google/GitHub con state parameter</li>
+                    <li><strong>Usuario autoriza</strong> en el proveedor OAuth</li>
+                    <li><strong>Callback</strong> con código y state de verificación</li>
+                    <li><strong>Verificación</strong> de state desde memoria storage</li>
+                    <li><strong>Intercambio</strong> de código por access token</li>
+                    <li><strong>Obtención</strong> de datos de usuario del proveedor</li>
+                    <li><strong>Creación/actualización</strong> de usuario en base de datos</li>
+                    <li><strong>Generación</strong> de JWT y establecimiento de cookie segura</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>💡 Afor App - Sistema de Branding con OAuth2 | Actualizado con Google & GitHub</p>
+        </div>
+    </div>
+
+    <script>
+        // Configuración mejorada de Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true,
+                curve: 'linear',
+                padding: 15,
+                nodeSpacing: 40,
+                rankSpacing: 80,
+                diagramPadding: 20
+            },
+            themeVariables: {
+                primaryColor: '#3498db',
+                primaryTextColor: '#2c3e50',
+                primaryBorderColor: '#2980b9',
+                lineColor: '#34495e',
+                secondaryColor: '#ecf0f1',
+                tertiaryColor: '#f8f9fa',
+                fontSize: '14px'
+            },
+            securityLevel: 'loose'
+        });
+        
+        // Función para ajustar el tamaño del diagrama
+        function adjustDiagram() {
+            const mermaidElements = document.querySelectorAll('.mermaid svg');
+            mermaidElements.forEach(svg => {
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = 'none';
+            });
+        }
+        
+        // Ajustar después de que se renderice
+        setTimeout(() => {
+            adjustDiagram();
+        }, 1000);
+        
+        // Hacer el diagrama responsive
+        window.addEventListener('resize', function() {
+            setTimeout(() => {
+                adjustDiagram();
+            }, 100);
+        });
+    </script>
+</body>
+</html> 
